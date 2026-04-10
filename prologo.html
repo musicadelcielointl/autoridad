@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prólogo — El llamado a vivir bajo Autoridad</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root{--cream:#F5F0E8;--dark:#1A1510;--gold:#B8965A;--gold-light:#D4B483;--gold-pale:#EDD99A;--burgundy:#5C2E2E;--text:#2C2416;--muted:#7A6E5F;--correct:#2D5A27;--wrong:#7A1F1F;--card-bg:#FFFDF8}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background-color:var(--cream);color:var(--text);font-family:'Lato',sans-serif;font-weight:300;min-height:100vh;background-image:radial-gradient(ellipse at 10% 20%,rgba(184,150,90,.06) 0%,transparent 60%),radial-gradient(ellipse at 90% 80%,rgba(92,46,46,.05) 0%,transparent 60%)}
+  .top-bar{background:var(--dark);padding:12px 40px;display:flex;align-items:center;justify-content:space-between}
+  .series{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
+  .nav-link{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;color:var(--gold-light);text-decoration:none;opacity:.8;transition:opacity .2s}
+  .nav-link:hover{opacity:1}
+  .hero{text-align:center;padding:60px 40px 40px}
+  .chapter-label{font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:16px;display:block}
+  .chapter-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,5vw,52px);font-weight:300;color:var(--dark);line-height:1.2;margin-bottom:12px}
+  .chapter-title em{font-style:italic;color:var(--burgundy)}
+  .divider{display:flex;align-items:center;justify-content:center;gap:16px;margin:24px auto;max-width:300px}
+  .divider-line{flex:1;height:1px;background:var(--gold-light);opacity:.5}
+  .divider-diamond{width:6px;height:6px;background:var(--gold);transform:rotate(45deg)}
+  .subtitle{font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:var(--muted);max-width:520px;margin:0 auto 8px;line-height:1.7}
+  .progress-container{max-width:680px;margin:0 auto 40px;padding:0 40px}
+  .progress-info{display:flex;justify-content:space-between;font-size:12px;letter-spacing:1px;color:var(--muted);margin-bottom:8px;font-family:'Cinzel',serif}
+  .progress-bar{height:3px;background:rgba(184,150,90,.2);border-radius:2px;overflow:hidden}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-pale));border-radius:2px;transition:width .5s ease;width:0%}
+  .quiz-container{max-width:680px;margin:0 auto;padding:0 24px 80px}
+  .question-card{background:var(--card-bg);border:1px solid rgba(184,150,90,.2);border-radius:2px;padding:36px 40px;margin-bottom:24px;display:none;animation:fadeSlide .4s ease forwards;box-shadow:0 4px 24px rgba(26,21,16,.06);position:relative}
+  .question-card.active{display:block}
+  .question-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,var(--gold),transparent);border-radius:2px 0 0 2px}
+  @keyframes fadeSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .question-number{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:14px}
+  .question-text{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:400;line-height:1.55;color:var(--dark);margin-bottom:28px}
+  .options{display:flex;flex-direction:column;gap:10px}
+  .option{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;border:1px solid rgba(184,150,90,.25);border-radius:2px;cursor:pointer;transition:all .2s ease;background:transparent;text-align:left;width:100%;font-family:'Lato',sans-serif;font-size:14px;font-weight:300;color:var(--text);line-height:1.5}
+  .option:hover:not(:disabled){border-color:var(--gold);background:rgba(184,150,90,.05)}
+  .option-letter{font-family:'Cinzel',serif;font-size:11px;color:var(--gold);min-width:18px;margin-top:1px}
+  .option.correct{border-color:var(--correct);background:rgba(45,90,39,.06);color:var(--correct)}
+  .option.wrong{border-color:var(--wrong);background:rgba(122,31,31,.06);color:var(--wrong)}
+  .option:disabled{cursor:default}
+  .feedback{display:none;margin-top:20px;padding:16px 20px;border-left:3px solid var(--gold);background:rgba(184,150,90,.06);border-radius:0 2px 2px 0}
+  .feedback.show{display:block;animation:fadeSlide .3s ease forwards}
+  .feedback-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;color:var(--gold);margin-bottom:6px}
+  .feedback-text{font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:var(--muted);line-height:1.65}
+  .nav-buttons{display:flex;justify-content:space-between;align-items:center;margin-top:28px}
+  .btn{font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:12px 28px;border:1px solid var(--gold);background:transparent;color:var(--gold);cursor:pointer;transition:all .2s ease;border-radius:1px}
+  .btn:hover{background:var(--gold);color:var(--dark)}
+  .btn:disabled{opacity:.3;cursor:default}
+  .btn-primary{background:var(--dark);color:var(--gold-light);border-color:var(--dark)}
+  .btn-primary:hover{background:var(--gold);color:var(--dark);border-color:var(--gold)}
+  .results-card{display:none;background:var(--dark);border-radius:2px;padding:56px 40px;text-align:center;animation:fadeSlide .5s ease forwards}
+  .results-card.show{display:block}
+  .results-icon{font-size:48px;margin-bottom:20px}
+  .results-label{font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--gold);margin-bottom:12px}
+  .results-score{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:300;color:var(--cream);line-height:1;margin-bottom:8px}
+  .results-score span{font-size:32px;color:var(--gold-light)}
+  .results-message{font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:var(--gold-light);margin:20px auto;max-width:420px;line-height:1.6}
+  .results-verse{font-family:'Cormorant Garamond',serif;font-size:15px;color:rgba(245,240,232,.5);font-style:italic;margin-top:28px}
+  .results-actions{display:flex;gap:16px;justify-content:center;margin-top:36px;flex-wrap:wrap}
+  .btn-light{border-color:var(--gold-light);color:var(--gold-light)}
+  .btn-light:hover{background:var(--gold-light);color:var(--dark)}
+  /* Share modal */
+  .share-overlay{display:none;position:fixed;inset:0;background:rgba(26,21,16,.92);z-index:100;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px)}
+  .share-overlay.show{display:flex}
+  .share-modal{background:#FFFDF8;border-radius:2px;padding:40px;max-width:440px;width:100%;position:relative;animation:fadeSlide .3s ease forwards;box-shadow:0 24px 80px rgba(26,21,16,.5)}
+  .share-close{position:absolute;top:16px;right:20px;background:none;border:none;font-size:20px;cursor:pointer;color:#7A6E5F;line-height:1}
+  .share-title{font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;color:#B8965A;text-transform:uppercase;margin-bottom:8px}
+  .share-subtitle{font-family:'Cormorant Garamond',serif;font-size:20px;color:#1A1510;margin-bottom:24px;line-height:1.3}
+  .share-field-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:#7A6E5F;text-transform:uppercase;margin-bottom:6px;display:block}
+  .share-input{width:100%;padding:12px 14px;border:1px solid rgba(184,150,90,.35);border-radius:2px;font-family:'Lato',sans-serif;font-size:14px;font-weight:300;color:#2C2416;background:transparent;margin-bottom:16px;outline:none;transition:border-color .2s}
+  .share-input:focus{border-color:#B8965A}
+  .share-divider{display:flex;align-items:center;gap:12px;margin:4px 0 16px}
+  .share-divider-line{flex:1;height:1px;background:rgba(184,150,90,.2)}
+  .share-divider-text{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:#B8965A;opacity:.6}
+  .share-buttons{display:flex;flex-direction:column;gap:10px}
+  .share-btn{width:100%;padding:13px 20px;border-radius:2px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;border:none}
+  .share-btn-email{background:#1A1510;color:#D4B483}
+  .share-btn-email:hover{background:#B8965A;color:#1A1510}
+  .share-btn-sms{background:transparent;border:1px solid rgba(184,150,90,.4);color:#B8965A}
+  .share-btn-sms:hover{background:rgba(184,150,90,.08);border-color:#B8965A}
+  .share-btn-copy{background:transparent;border:1px solid rgba(184,150,90,.2);color:#7A6E5F;font-size:9px}
+  .share-btn-copy:hover{border-color:rgba(184,150,90,.5);color:#B8965A}
+  .share-note{font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:#7A6E5F;margin-top:16px;text-align:center;line-height:1.5}
+  .share-success{display:none;text-align:center;padding:16px}
+  .share-success.show{display:block}
+  .share-success-icon{font-size:32px;margin-bottom:8px}
+  .share-success-text{font-family:'Cormorant Garamond',serif;font-size:18px;font-style:italic;color:#2D5A27}
+  @media(max-width:600px){.hero{padding:40px 24px 24px}.question-card{padding:28px 24px}.top-bar{padding:12px 24px}.progress-container{padding:0 24px}}
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <span class="series">En Autoridad &amp; Bajo Autoridad — Milton Valle</span>
+  <a href="index.html" class="nav-link">← Todos los capítulos</a>
+</div>
+<div class="hero">
+  <span class="chapter-label">Prólogo</span>
+  <h1 class="chapter-title">El llamado a vivir bajo <em>Autoridad</em></h1>
+  <div class="divider"><div class="divider-line"></div><div class="divider-diamond"></div><div class="divider-line"></div></div>
+  <p class="subtitle">La historia de Absalón ilustra que el dolor legítimo no tratado bajo autoridad se convierte en resentimiento, rebelión y muerte. Este prólogo es una invitación a elegir el camino distinto.</p>
+</div>
+<div class="progress-container">
+  <div class="progress-info"><span id="progress-text">Pregunta 1 de 12</span><span id="score-text">0 correctas</span></div>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+<div class="quiz-container">
+<div class="question-card active" id="q1"><div class="question-number">Pregunta 01</div><p class="question-text">El autor del prólogo lleva más de 50 años siendo hijo de pastor y 30 años siendo pastor principal. ¿Cuál es el problema que identifica como 'el más frecuente y dañino' en la iglesia?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q1')"><span class="option-letter">A</span>La falta de predicación expositiva de la Biblia</button>
+<button class="option" onclick="answer(this,false,'q1')"><span class="option-letter">B</span>La ausencia de discipulado en las congregaciones</button>
+<button class="option" onclick="answer(this,false,'q1')"><span class="option-letter">C</span>La superficialidad en la adoración</button>
+<button class="option" onclick="answer(this,true,'q1')"><span class="option-letter">D</span>El problema de la autoridad: a los seres humanos desde la cuna nos cuesta aprender a respetarla</button>
+</div><div class="feedback" id="fb1"><div class="feedback-title">Reflexión</div><div class="feedback-text">Esta observación viene de décadas de experiencia pastoral. No es teoría; es diagnóstico de campo. El problema de la autoridad es transversal a toda edad, cultura y nivel espiritual.</div></div><div class="nav-buttons"><button class="btn" disabled>← Anterior</button><button class="btn btn-primary" id="next1" onclick="next(1)" disabled>Siguiente →</button></div></div>
+<div class="question-card" id="q2"><div class="question-number">Pregunta 02</div><p class="question-text">Según el prólogo, ¿cuál es la diferencia entre cómo Dios promueve y cómo el mundo promueve?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q2')"><span class="option-letter">A</span>El mundo promueve por dinero; Dios por carisma</button>
+<button class="option" onclick="answer(this,false,'q2')"><span class="option-letter">B</span>El mundo promueve por experiencia; Dios por fe ciega</button>
+<button class="option" onclick="answer(this,true,'q2')"><span class="option-letter">C</span>El mundo promueve por reconocimiento y plataforma; Dios promueve por madurez formada bajo autoridad y en el anonimato</button>
+<button class="option" onclick="answer(this,false,'q2')"><span class="option-letter">D</span>No hay diferencia real; Dios usa los mismos criterios pero con motivos distintos</button>
+</div><div class="feedback" id="fb2"><div class="feedback-title">Reflexión</div><div class="feedback-text">En el Reino, la promoción no comienza en la plataforma sino en la sumisión. No comienza cuando otros te reconocen, sino cuando Dios te aprueba. Él forma primero en el lugar secreto antes de confiar una plataforma.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(2)">← Anterior</button><button class="btn btn-primary" id="next2" onclick="next(2)" disabled>Siguiente →</button></div></div>
+<div class="question-card" id="q3"><div class="question-number">Pregunta 03</div><p class="question-text">Absalón vivió una situación dolorosa cuando su hermana Tamar fue violada por Amnón. ¿Cuál fue la respuesta inicial del rey David que abrió una puerta peligrosa en el corazón de Absalón?</p><div class="options"><button class="option" onclick="answer(this,false,'q3')"><span class="option-letter">A</span>David expulsó a Amnón de la familia inmediatamente</button>
+<button class="option" onclick="answer(this,true,'q3')"><span class="option-letter">B</span>David se indignó pero no ejecutó justicia visible ni inmediata, lo que Absalón interpretó como indiferencia o debilidad</button>
+<button class="option" onclick="answer(this,false,'q3')"><span class="option-letter">C</span>David ordenó a Absalón que perdonara a Amnón públicamente</button>
+<button class="option" onclick="answer(this,false,'q3')"><span class="option-letter">D</span>David ignoró completamente la situación</button>
+</div><div class="feedback" id="fb3"><div class="feedback-title">Reflexión</div><div class="feedback-text">El silencio de David no era aprobación, pero Absalón lo interpretó como indiferencia o debilidad de liderazgo. Así se abrió la puerta: el dolor legítimo que no encuentra respuesta en la autoridad puede convertirse en resentimiento.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(3)">← Anterior</button><button class="btn btn-primary" id="next3" onclick="next(3)" disabled>Siguiente →</button></div></div>
+<div class="question-card" id="q4"><div class="question-number">Pregunta 04</div><p class="question-text">Absalón guardó silencio por dos años después de la violación de Tamar. ¿Qué revela el autor sobre ese silencio?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q4')"><span class="option-letter">A</span>Era señal de madurez espiritual y proceso de sanidad</button>
+<button class="option" onclick="answer(this,false,'q4')"><span class="option-letter">B</span>Fue obediencia a su padre David quien le pidió callar</button>
+<button class="option" onclick="answer(this,false,'q4')"><span class="option-letter">C</span>Indicaba que Absalón había perdonado a Amnón genuinamente</button>
+<button class="option" onclick="answer(this,true,'q4')"><span class="option-letter">D</span>Era paz superficial; en realidad era amargura incubándose que transformó dolor legítimo en resentimiento</button>
+</div><div class="feedback" id="fb4"><div class="feedback-title">Reflexión</div><div class="feedback-text">Lo que comenzó como dolor legítimo terminó transformándose en resentimiento, y el resentimiento, cuando no se trata correctamente, se convierte en rebelión. El tiempo no sana lo que no se trata ante Dios y bajo autoridad.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(4)">← Anterior</button><button class="btn btn-primary" id="next4" onclick="next(4)" disabled>Siguiente →</button></div></div>
+<div class="question-card" id="q5"><div class="question-number">Pregunta 05</div><p class="question-text">¿Por qué el autor dice que cuando Absalón mandó matar a Amnón, 'asumió un papel que solo le corresponde a Dios'?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q5')"><span class="option-letter">A</span>Porque el asesinato es siempre pecado contra Dios creador de la vida</button>
+<button class="option" onclick="answer(this,false,'q5')"><span class="option-letter">B</span>Porque Amnón era un ungido de Dios al ser hijo de rey</button>
+<button class="option" onclick="answer(this,false,'q5')"><span class="option-letter">C</span>Porque la decisión de matar pertenece solo al rey David</button>
+<button class="option" onclick="answer(this,true,'q5')"><span class="option-letter">D</span>Porque tomó la justicia en sus propias manos en lugar de confiar en que Dios defendería la causa de Tamar</button>
+</div><div class="feedback" id="fb5"><div class="feedback-title">Reflexión</div><div class="feedback-text">Cuando una persona bajo autoridad deja de confiar en la justicia de Dios, corre el peligro de convertirse en juez por sí misma. Y cuando alguien asume un papel que solo le corresponde a Dios, casi siempre termina tomando decisiones destructivas.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(5)">← Anterior</button><button class="btn btn-primary" id="next5" onclick="next(5)" disabled>Siguiente →</button></div></div>
+<div class="question-card" id="q6"><div class="question-number">Pregunta 06</div><p class="question-text">Después de matar a Amnón, Absalón huyó a Gesur, donde su abuelo materno era rey, y estuvo allí tres años. ¿Qué simboliza Gesur en la enseñanza del prólogo?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q6')"><span class="option-letter">A</span>Un lugar legítimo de refugio para quien ha sufrido injusticia</button>
+<button class="option" onclick="answer(this,false,'q6')"><span class="option-letter">B</span>Una etapa de formación espiritual lejos de las distracciones</button>
+<button class="option" onclick="answer(this,true,'q6')"><span class="option-letter">C</span>Un lugar donde se incuba la rebelión; no fue para reconciliarse sino para escapar del proceso y de la autoridad</button>
+<button class="option" onclick="answer(this,false,'q6')"><span class="option-letter">D</span>Un símbolo de la misericordia de Dios que da espacio para reflexionar</button>
+</div><div class="feedback" id="fb6"><div class="feedback-title">Reflexión</div><div class="feedback-text">Gesur significa 'puente o lugar de transición'. Absalón lo usó para escapar, no para reconciliarse. Migrar espiritualmente —cambiar de iglesia o comunidad— sin haber resuelto el conflicto, no es dirección de Dios; es evasión de un corazón que no quiere ser confrontado.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(6)">← Anterior</button><button class="btn btn-primary" id="next6" onclick="next(6)" disabled>Siguiente →</button></div></div>
+<div class="question-card" id="q7"><div class="question-number">Pregunta 07</div><p class="question-text">¿Cuál es la diferencia que el autor establece entre el creyente que huye de los procesos y el creyente maduro?</p><div class="options">
+<button class="option" onclick="answer(this,true,'q7')"><span class="option-letter">A</span>El creyente maduro se mantiene bajo autoridad, permanece hasta que Dios sana y forma su carácter, aunque sea incómodo</button>
+<button class="option" onclick="answer(this,false,'q7')"><span class="option-letter">B</span>El creyente maduro tiene más paciencia natural para soportar</button>
+<button class="option" onclick="answer(this,false,'q7')"><span class="option-letter">C</span>El creyente maduro busca otra iglesia cuando hay conflicto</button>
+<button class="option" onclick="answer(this,false,'q7')"><span class="option-letter">D</span>El creyente maduro solo permanece si la autoridad es justa</button>
+</div><div class="feedback" id="fb7"><div class="feedback-title">Reflexión</div><div class="feedback-text">El creyente maduro se mantiene bajo autoridad, no huye del proceso. Permanece hasta que Dios sana, restaura y forma su carácter. Permanecer también implica someterse a procesos y a estar bajo la autoridad espiritual, aunque sea incómodo.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(7)">← Anterior</button><button class="btn btn-primary" id="next7" onclick="next(7)" disabled>Siguiente →</button></div></div>
+<div class="question-card" id="q8"><div class="question-number">Pregunta 08</div><p class="question-text">Absalón regresó a Jerusalén pero no se rebeló inmediatamente. Primero sembró división. ¿Cuál fue su estrategia específica según 2 Samuel 15?</p><div class="options"><button class="option" onclick="answer(this,false,'q8')"><span class="option-letter">A</span>Organizó una asamblea pública para debatir el liderazgo de David</button>
+<button class="option" onclick="answer(this,true,'q8')"><span class="option-letter">B</span>Se colocaba a la entrada de la ciudad, escuchaba quejas de la gente, y les decía que él haría justicia si gobernara, robando así el corazón de Israel</button>
+<button class="option" onclick="answer(this,false,'q8')"><span class="option-letter">C</span>Escribió cartas a los líderes de las tribus acusando a David</button>
+<button class="option" onclick="answer(this,false,'q8')"><span class="option-letter">D</span>Usó sus 50 hombres para intimidar a los que iban a ver al rey</button>
+</div><div class="feedback" id="fb8"><div class="feedback-title">Reflexión</div><div class="feedback-text">La murmuración es peligrosa porque es silenciosa pero contagiosa; es sutil pero destructiva; parece inofensiva pero crea división profunda. Absalón no gritó su rebelión; la susurró en conversaciones privadas en la entrada de la ciudad.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(8)">← Anterior</button><button class="btn btn-primary" id="next8" onclick="next(8)" disabled>Siguiente →</button></div></div>
+<div class="question-card" id="q9"><div class="question-number">Pregunta 09</div><p class="question-text">El final de Absalón fue quedar suspendido entre el cielo y la tierra colgado de una encina por su cabellera (2 Samuel 18). ¿Qué imagen usa el autor para describir ese final?</p><div class="options">
+<button class="option" onclick="answer(this,true,'q9')"><span class="option-letter">A</span>Quedó sin avance, sin dirección, sin propósito, sin pena ni gloria: quiso ocupar autoridad pero nunca aprendió a estar bajo autoridad</button>
+<button class="option" onclick="answer(this,false,'q9')"><span class="option-letter">B</span>Como una advertencia de Dios para todos los reyes futuros de Israel</button>
+<button class="option" onclick="answer(this,false,'q9')"><span class="option-letter">C</span>Como el cumplimiento de la maldición de David sobre sus enemigos</button>
+<button class="option" onclick="answer(this,false,'q9')"><span class="option-letter">D</span>Como símbolo del orgullo que siempre termina siendo humillado</button>
+</div><div class="feedback" id="fb9"><div class="feedback-title">Reflexión</div><div class="feedback-text">Tenía potencial: era hijo de rey, tenía influencia, liderazgo y plataforma. Pero su problema no fue falta de capacidad, sino familiaridad, rebelión y falta de sujeción. Esto lo llevó a perder su destino y terminar en muerte.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(9)">← Anterior</button><button class="btn btn-primary" id="next9" onclick="next(9)" disabled>Siguiente →</button></div></div>
+<div class="question-card" id="q10"><div class="question-number">Pregunta 10</div><p class="question-text">El prólogo describe tres verdades dolorosas que ocurren cuando alguien rechaza la autoridad en la iglesia. ¿Cuáles son?</p><div class="options">
+<button class="option" onclick="answer(this,true,'q10')"><span class="option-letter">A</span>Emigrar (irse sin cerrar ciclos), dividir (murmurar y crear bandos), y desmembrar (irse en rebelión llevándose gente)</button>
+<button class="option" onclick="answer(this,false,'q10')"><span class="option-letter">B</span>Pecado, enfermedad y muerte espiritual</button>
+<button class="option" onclick="answer(this,false,'q10')"><span class="option-letter">C</span>Apostasía, herejía y cisma doctrinal</button>
+<button class="option" onclick="answer(this,false,'q10')"><span class="option-letter">D</span>Orgullo, envidia y manipulación</button>
+</div><div class="feedback" id="fb10"><div class="feedback-title">Reflexión</div><div class="feedback-text">Emigrar sin cerrar ciclos arranca raíces. Dividir desde dentro con murmuración crea bandos que Dios repudia. Desmembrar llevándose gente en rebelión trae consecuencias terribles y a veces aun la muerte. Procura no caer en ninguna de las tres.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(10)">← Anterior</button><button class="btn btn-primary" id="next10" onclick="next(10)" disabled>Siguiente →</button></div></div>
+<div class="question-card" id="q11"><div class="question-number">Pregunta 11</div><p class="question-text">El consejo del prólogo para el que está bajo autoridad dice: 'No permitas que las heridas, los silencios o los procesos que no entiendes te saquen del lugar donde Dios te está formando.' ¿Cuál es la promesa ligada a ese consejo?</p><div class="options"><button class="option" onclick="answer(this,false,'q11')"><span class="option-letter">A</span>Que Dios eliminará el dolor si permanecemos bajo autoridad</button>
+<button class="option" onclick="answer(this,true,'q11')"><span class="option-letter">B</span>Que el que sabe obedecer en lo secreto será establecido por Dios en lo público</button>
+<button class="option" onclick="answer(this,false,'q11')"><span class="option-letter">C</span>Que la autoridad eventualmente reconocerá su error y pedirá perdón</button>
+<button class="option" onclick="answer(this,false,'q11')"><span class="option-letter">D</span>Que los procesos siempre terminan en pocas semanas si se obedece</button>
+</div><div class="feedback" id="fb11"><div class="feedback-title">Reflexión</div><div class="feedback-text">La sujeción no es debilidad, es diseño divino. Permanece, honra, guarda tu corazón y confía en que Dios es justo. La promesa es clara: el que sabe obedecer en lo secreto será establecido por Dios en lo público.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(11)">← Anterior</button><button class="btn btn-primary" id="next11" onclick="next(11)" disabled>Siguiente →</button></div></div>
+<div class="question-card" id="q12"><div class="question-number">Pregunta 12</div><p class="question-text">¿Cuál es la visión final que el autor expresa para los lectores de este libro, al cerrar el prólogo?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q12')"><span class="option-letter">A</span>Que toda la iglesia se someta sin cuestionamiento a sus pastores</button>
+<button class="option" onclick="answer(this,false,'q12')"><span class="option-letter">B</span>Que los líderes renuncien a su autoridad y sirvan como iguales</button>
+<button class="option" onclick="answer(this,true,'q12')"><span class="option-letter">C</span>Levantar una generación que al ser autoridad lo haga con el Espíritu de Cristo, y al estar bajo autoridad se deje formar con ese mismo Espíritu</button>
+<button class="option" onclick="answer(this,false,'q12')"><span class="option-letter">D</span>Que cada creyente evalúe si su autoridad merece obediencia</button>
+</div><div class="feedback" id="fb12"><div class="feedback-title">Reflexión</div><div class="feedback-text">La visión es doble y equilibrada: líderes que ejerzan autoridad con el espíritu que modeló Cristo Jesús, y seguidores que al estar bajo autoridad se dejen formar y desarrollar con ese mismo Espíritu. No uno sin el otro.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(12)">← Anterior</button><button class="btn btn-primary" onclick="showResults()">Ver resultados →</button></div></div>
+
+  <div class="results-card" id="results">
+    <div class="results-icon">✦</div>
+    <div class="results-label">Resultado Final — Prólogo</div>
+    <div class="results-score" id="score-display">0<span>/12</span></div>
+    <p class="results-message" id="results-message"></p>
+    <p class="results-verse">"La sujeción no es debilidad, es diseño divino." — Milton Valle</p>
+    <div class="results-actions">
+      <button class="btn btn-light" onclick="restart()">Intentar de nuevo</button>
+      <button class="btn btn-primary" onclick="openShare('El llamado a vivir bajo Autoridad', score, total)" style="background:#B8965A;border-color:#B8965A;color:#1A1510;">✉ Enviar resultados</button>
+      <a href="capitulo1.html" class="btn btn-primary" style="text-decoration:none;">Capítulo 1 →</a>
+      <a href="index.html" class="btn btn-light" style="text-decoration:none;">Ver todos</a>
+    </div>
+  </div>
+</div>
+
+<div class="share-overlay" id="shareOverlay" onclick="closeShareIfOutside(event)">
+  <div class="share-modal" id="shareModal">
+    <button class="share-close" onclick="closeShare()">✕</button>
+    <div id="shareForm">
+      <div class="share-title">Compartir resultados</div>
+      <div class="share-subtitle" id="shareModalTitle">Envía tu nota y reflexiones</div>
+      <label class="share-field-label" for="shareEmail">Correo electrónico</label>
+      <input class="share-input" type="email" id="shareEmail" placeholder="tu@correo.com">
+      <button class="share-btn share-btn-email" onclick="sendEmail()">✉ Enviar por correo</button>
+      <div class="share-divider"><div class="share-divider-line"></div><div class="share-divider-text">o por</div><div class="share-divider-line"></div></div>
+      <label class="share-field-label" for="sharePhone">Número de teléfono</label>
+      <input class="share-input" type="tel" id="sharePhone" placeholder="+1 (555) 000-0000">
+      <button class="share-btn share-btn-sms" onclick="sendSMS()">💬 Enviar por mensaje de texto</button>
+      <div class="share-divider" style="margin-top:16px"><div class="share-divider-line"></div><div class="share-divider-text">o simplemente</div><div class="share-divider-line"></div></div>
+      <button class="share-btn share-btn-copy" onclick="copyToClipboard()">⎘ Copiar al portapapeles</button>
+      <p class="share-note">El resumen incluye tu nota, las preguntas y todas las reflexiones.</p>
+    </div>
+    <div class="share-success" id="shareSuccess">
+      <div class="share-success-icon">✦</div>
+      <p class="share-success-text" id="shareSuccessText"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+let current=1,score=0;const total=12,answered={};
+function answer(btn,isCorrect,qId){
+  if(answered[qId])return;answered[qId]=true;
+  const options=btn.parentElement.querySelectorAll('.option');
+  options.forEach(o=>{o.disabled=true});
+  const num=parseInt(qId.replace('q',''));
+  if(isCorrect){btn.classList.add('correct');score++;document.getElementById('score-text').textContent=score+' correcta'+(score!==1?'s':'');}
+  else{btn.classList.add('wrong');options.forEach(o=>{if(o.getAttribute('onclick').includes('true'))o.classList.add('correct')});}
+  const qCard=document.getElementById('q'+num);
+  const qText=qCard.querySelector('.question-text').textContent;
+  const fbText=qCard.querySelector('.feedback-text').textContent;
+  recordAnswer(num,qText,btn.textContent.trim().replace(/^[A-D]/,'').trim(),isCorrect,fbText);
+  document.getElementById('fb'+num).classList.add('show');
+  const nextBtn=document.getElementById('next'+num);if(nextBtn)nextBtn.disabled=false;
+  if(num===total)document.querySelector('#q12 .btn-primary').disabled=false;
+}
+function next(n){document.getElementById('q'+n).classList.remove('active');current=n+1;document.getElementById('q'+current).classList.add('active');updateProgress();window.scrollTo({top:0,behavior:'smooth'});}
+function prev(n){document.getElementById('q'+n).classList.remove('active');current=n-1;document.getElementById('q'+current).classList.add('active');updateProgress();window.scrollTo({top:0,behavior:'smooth'});}
+function updateProgress(){document.getElementById('progress-text').textContent='Pregunta '+current+' de '+total;document.getElementById('progress-fill').style.width=((current-1)/total*100)+'%';}
+function showResults(){
+  document.getElementById('q12').classList.remove('active');
+  const r=document.getElementById('results');r.classList.add('show');
+  document.getElementById('score-display').innerHTML=score+'<span>/'+total+'</span>';
+  const pct=Math.round((score/total)*100);
+  let msg='';
+  if(pct>=83)msg='Excelente. Este mensaje ha calado profundo en tu comprensión. Que esta verdad se convierta en obediencia activa.';
+  else if(pct>=58)msg='Buen avance. Te invitamos a releer las secciones donde dudaste y llevarlas a la oración.';
+  else msg='Esta sección tiene mucho más para darte. Vuelve a leerla con calma y pídele a Dios revelación, no solo información.';
+  document.getElementById('results-message').textContent=msg;
+  document.getElementById('progress-fill').style.width='100%';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function restart(){location.reload();}
+updateProgress();
+document.querySelector('#q12 .btn-primary').disabled=true;
+
+const questionData={};
+function recordAnswer(n,qText,selText,isCorrect,fbText){questionData[n]={questionText:qText,selectedText:selText,isCorrect,feedbackText:fbText};}
+function buildSummary(chapterTitle,scoreVal,totalVal){
+  const pct=Math.round((scoreVal/totalVal)*100);
+  let s='== EN AUTORIDAD & BAJO AUTORIDAD ==\nMilton Valle\n\n';
+  s+=`Sección: ${chapterTitle}\nNota: ${scoreVal}/${totalVal} (${pct}%)\n─────────────────────────────\n\n`;
+  Object.keys(questionData).map(Number).sort((a,b)=>a-b).forEach(n=>{
+    const d=questionData[n];
+    s+=`${d.isCorrect?'✓':'✗'} Pregunta ${n}: ${d.questionText}\n   Mi respuesta: ${d.selectedText}\n   Reflexión: ${d.feedbackText}\n\n`;
+  });
+  s+='─────────────────────────────\n';
+  s+=pct>=83?'"El que sabe obedecer en lo secreto, será establecido por Dios en lo público."':'"Prefiero ser formado bajo Tu autoridad que usado sin estar rendido a Tu voluntad."';
+  s+='\n— En Autoridad & Bajo Autoridad — Milton Valle';
+  return s;
+}
+let currentSummary='',currentChapterTitle='';
+function openShare(title,scoreVal,totalVal){
+  currentChapterTitle=title;currentSummary=buildSummary(title,scoreVal,totalVal);
+  document.getElementById('shareModalTitle').textContent=`Sección: ${title}`;
+  document.getElementById('shareOverlay').classList.add('show');
+  document.getElementById('shareForm').style.display='block';
+  document.getElementById('shareSuccess').classList.remove('show');
+}
+function closeShare(){document.getElementById('shareOverlay').classList.remove('show');}
+function closeShareIfOutside(e){if(e.target===document.getElementById('shareOverlay'))closeShare();}
+function sendEmail(){
+  const email=document.getElementById('shareEmail').value.trim();
+  if(!email||!email.includes('@')){document.getElementById('shareEmail').style.borderColor='#7A1F1F';document.getElementById('shareEmail').focus();return;}
+  document.getElementById('shareEmail').style.borderColor='';
+  window.location.href=`mailto:${email}?subject=${encodeURIComponent('Mi resultado — '+currentChapterTitle+' | En Autoridad & Bajo Autoridad')}&body=${encodeURIComponent(currentSummary)}`;
+  showSuccess('Tu cliente de correo abrirá en un momento con el resumen listo para enviar.');
+}
+function sendSMS(){
+  const phone=document.getElementById('sharePhone').value.trim().replace(/\s/g,'');
+  if(!phone){document.getElementById('sharePhone').style.borderColor='#7A1F1F';document.getElementById('sharePhone').focus();return;}
+  document.getElementById('sharePhone').style.borderColor='';
+  const keys=Object.keys(questionData).map(Number).sort((a,b)=>a-b);
+  const c2=keys.filter(n=>questionData[n].isCorrect).length;
+  const pct=Math.round((c2/keys.length)*100);
+  let sms=`En Autoridad & Bajo Autoridad\nSección: ${currentChapterTitle}\nNota: ${c2}/${keys.length} (${pct}%)\n\n`;
+  keys.forEach(n=>{const d=questionData[n];sms+=`${d.isCorrect?'✓':'✗'} P${n}: ${d.selectedText}\n   → ${d.feedbackText}\n\n`;});
+  sms+=pct>=83?'"El que sabe obedecer en lo secreto..."':'"Prefiero ser formado bajo Tu autoridad."';
+  window.location.href=`sms:${phone}?body=${encodeURIComponent(sms)}`;
+  showSuccess('Tu aplicación de mensajes se abrirá con el resumen completo y todas las reflexiones.');
+}
+function copyToClipboard(){
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(currentSummary).then(()=>showSuccess('Resultados copiados al portapapeles.')).catch(()=>fallbackCopy());}
+  else fallbackCopy();
+}
+function fallbackCopy(){const ta=document.createElement('textarea');ta.value=currentSummary;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');showSuccess('Resultados copiados al portapapeles.');}catch(e){showSuccess('No se pudo copiar automáticamente.');}document.body.removeChild(ta);}
+function showSuccess(msg){document.getElementById('shareForm').style.display='none';document.getElementById('shareSuccessText').textContent=msg;document.getElementById('shareSuccess').classList.add('show');setTimeout(()=>closeShare(),3500);}
+
+</script>
+</body>
+</html>

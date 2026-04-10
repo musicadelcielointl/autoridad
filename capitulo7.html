@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capítulo 7 — Fuego extraño en la iglesia</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root{--cream:#F5F0E8;--dark:#1A1510;--gold:#B8965A;--gold-light:#D4B483;--gold-pale:#EDD99A;--burgundy:#5C2E2E;--text:#2C2416;--muted:#7A6E5F;--correct:#2D5A27;--wrong:#7A1F1F;--card-bg:#FFFDF8}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background-color:var(--cream);color:var(--text);font-family:'Lato',sans-serif;font-weight:300;min-height:100vh;background-image:radial-gradient(ellipse at 10% 20%,rgba(184,150,90,.06) 0%,transparent 60%),radial-gradient(ellipse at 90% 80%,rgba(92,46,46,.05) 0%,transparent 60%)}
+  .top-bar{background:var(--dark);padding:12px 40px;display:flex;align-items:center;justify-content:space-between}
+  .top-bar .series{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
+  .top-bar .nav-link{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;color:var(--gold-light);text-decoration:none;opacity:.8;transition:opacity .2s}
+  .top-bar .nav-link:hover{opacity:1}
+  .hero{text-align:center;padding:60px 40px 40px}
+  .chapter-label{font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:16px;display:block}
+  .chapter-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,5vw,48px);font-weight:300;color:var(--dark);line-height:1.2;margin-bottom:12px}
+  .chapter-title em{font-style:italic;color:var(--burgundy)}
+  .divider{display:flex;align-items:center;justify-content:center;gap:16px;margin:24px auto;max-width:300px}
+  .divider-line{flex:1;height:1px;background:var(--gold-light);opacity:.5}
+  .divider-diamond{width:6px;height:6px;background:var(--gold);transform:rotate(45deg)}
+  .subtitle{font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:var(--muted);max-width:520px;margin:0 auto 8px;line-height:1.7}
+  .progress-container{max-width:680px;margin:0 auto 40px;padding:0 40px}
+  .progress-info{display:flex;justify-content:space-between;font-size:12px;letter-spacing:1px;color:var(--muted);margin-bottom:8px;font-family:'Cinzel',serif}
+  .progress-bar{height:3px;background:rgba(184,150,90,.2);border-radius:2px;overflow:hidden}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-pale));border-radius:2px;transition:width .5s ease;width:0%}
+  .quiz-container{max-width:680px;margin:0 auto;padding:0 24px 80px}
+  .question-card{background:var(--card-bg);border:1px solid rgba(184,150,90,.2);border-radius:2px;padding:36px 40px;margin-bottom:24px;display:none;animation:fadeSlide .4s ease forwards;box-shadow:0 4px 24px rgba(26,21,16,.06);position:relative}
+  .question-card.active{display:block}
+  .question-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,var(--gold),transparent);border-radius:2px 0 0 2px}
+  @keyframes fadeSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .question-number{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:14px}
+  .question-text{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:400;line-height:1.55;color:var(--dark);margin-bottom:28px}
+  .options{display:flex;flex-direction:column;gap:10px}
+  .option{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;border:1px solid rgba(184,150,90,.25);border-radius:2px;cursor:pointer;transition:all .2s ease;background:transparent;text-align:left;width:100%;font-family:'Lato',sans-serif;font-size:14px;font-weight:300;color:var(--text);line-height:1.5}
+  .option:hover:not(:disabled){border-color:var(--gold);background:rgba(184,150,90,.05)}
+  .option-letter{font-family:'Cinzel',serif;font-size:11px;color:var(--gold);min-width:18px;margin-top:1px}
+  .option.correct{border-color:var(--correct);background:rgba(45,90,39,.06);color:var(--correct)}
+  .option.wrong{border-color:var(--wrong);background:rgba(122,31,31,.06);color:var(--wrong)}
+  .option:disabled{cursor:default}
+  .feedback{display:none;margin-top:20px;padding:16px 20px;border-left:3px solid var(--gold);background:rgba(184,150,90,.06);border-radius:0 2px 2px 0}
+  .feedback.show{display:block;animation:fadeSlide .3s ease forwards}
+  .feedback-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;color:var(--gold);margin-bottom:6px}
+  .feedback-text{font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:var(--muted);line-height:1.65}
+  .nav-buttons{display:flex;justify-content:space-between;align-items:center;margin-top:28px}
+  .btn{font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:12px 28px;border:1px solid var(--gold);background:transparent;color:var(--gold);cursor:pointer;transition:all .2s ease;border-radius:1px}
+  .btn:hover{background:var(--gold);color:var(--dark)}
+  .btn:disabled{opacity:.3;cursor:default}
+  .btn-primary{background:var(--dark);color:var(--gold-light);border-color:var(--dark)}
+  .btn-primary:hover{background:var(--gold);color:var(--dark);border-color:var(--gold)}
+  .results-card{display:none;background:var(--dark);border-radius:2px;padding:56px 40px;text-align:center;animation:fadeSlide .5s ease forwards}
+  .results-card.show{display:block}
+  .results-icon{font-size:48px;margin-bottom:20px}
+  .results-label{font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--gold);margin-bottom:12px}
+  .results-score{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:300;color:var(--cream);line-height:1;margin-bottom:8px}
+  .results-score span{font-size:32px;color:var(--gold-light)}
+  .results-message{font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:var(--gold-light);margin:20px auto;max-width:420px;line-height:1.6}
+  .results-verse{font-family:'Cormorant Garamond',serif;font-size:15px;color:rgba(245,240,232,.5);font-style:italic;margin-top:28px}
+  .results-actions{display:flex;gap:16px;justify-content:center;margin-top:36px;flex-wrap:wrap}
+  .btn-light{border-color:var(--gold-light);color:var(--gold-light)}
+  .btn-light:hover{background:var(--gold-light);color:var(--dark)}
+  @media(max-width:600px){.hero{padding:40px 24px 24px}.question-card{padding:28px 24px}.top-bar{padding:12px 24px}.progress-container{padding:0 24px}}
+
+  /* Share modal */
+  .share-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26,21,16,0.92);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    backdrop-filter: blur(4px);
+  }
+  .share-overlay.show { display: flex; }
+  .share-modal {
+    background: #FFFDF8;
+    border-radius: 2px;
+    padding: 40px;
+    max-width: 440px;
+    width: 100%;
+    position: relative;
+    animation: fadeSlide 0.3s ease forwards;
+    box-shadow: 0 24px 80px rgba(26,21,16,0.5);
+  }
+  .share-close {
+    position: absolute;
+    top: 16px; right: 20px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #7A6E5F;
+    line-height: 1;
+  }
+  .share-title {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: #B8965A;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .share-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    color: #1A1510;
+    margin-bottom: 24px;
+    line-height: 1.3;
+  }
+  .share-field-label {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: #7A6E5F;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .share-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid rgba(184,150,90,0.35);
+    border-radius: 2px;
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: #2C2416;
+    background: transparent;
+    margin-bottom: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .share-input:focus { border-color: #B8965A; }
+  .share-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 4px 0 16px;
+  }
+  .share-divider-line { flex:1; height:1px; background: rgba(184,150,90,0.2); }
+  .share-divider-text {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: #B8965A;
+    opacity: 0.6;
+  }
+  .share-buttons { display: flex; flex-direction: column; gap: 10px; }
+  .share-btn {
+    width: 100%;
+    padding: 13px 20px;
+    border-radius: 2px;
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+    border: none;
+  }
+  .share-btn-email {
+    background: #1A1510;
+    color: #D4B483;
+  }
+  .share-btn-email:hover { background: #B8965A; color: #1A1510; }
+  .share-btn-sms {
+    background: transparent;
+    border: 1px solid rgba(184,150,90,0.4);
+    color: #B8965A;
+  }
+  .share-btn-sms:hover { background: rgba(184,150,90,0.08); border-color: #B8965A; }
+  .share-btn-copy {
+    background: transparent;
+    border: 1px solid rgba(184,150,90,0.2);
+    color: #7A6E5F;
+    font-size: 9px;
+  }
+  .share-btn-copy:hover { border-color: rgba(184,150,90,0.5); color: #B8965A; }
+  .share-note {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-style: italic;
+    color: #7A6E5F;
+    margin-top: 16px;
+    text-align: center;
+    line-height: 1.5;
+  }
+  .share-success {
+    display: none;
+    text-align: center;
+    padding: 16px;
+  }
+  .share-success.show { display: block; }
+  .share-success-icon { font-size: 32px; margin-bottom: 8px; }
+  .share-success-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: #2D5A27;
+  }
+
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <span class="series">En Autoridad &amp; Bajo Autoridad — Milton Valle</span>
+  <a href="index.html" class="nav-link">← Todos los capítulos</a>
+</div>
+<div class="hero">
+  <span class="chapter-label">Capítulo 7</span>
+  <h1 class="chapter-title">Fuego extraño en la <em>iglesia</em></h1>
+  <div class="divider"><div class="divider-line"></div><div class="divider-diamond"></div><div class="divider-line"></div></div>
+  <p class="subtitle">¡Un creyente sin discernimiento puede avivar un fuego extraño que Dios nunca encendió!</p>
+</div>
+<div class="progress-container">
+  <div class="progress-info"><span id="progress-text">Pregunta 1 de 12</span><span id="score-text">0 correctas</span></div>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+<div class="quiz-container">
+  <div class="question-card active" id="q1"><div class="question-number">Pregunta 01</div><p class="question-text">¿Cuál es la definición de 'fuego extraño' según el capítulo?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q1')"><span class="option-letter">A</span>Emociones negativas durante la adoración</button>
+<button class="option" onclick="answer(this,false,'q1')"><span class="option-letter">B</span>Música contemporánea usada en la iglesia sin aprobación pastoral</button>
+<button class="option" onclick="answer(this,true,'q1')"><span class="option-letter">C</span>Toda adoración, servicio o acercamiento a Dios ofrecido de una manera que Él no ha ordenado, fuera de Su mandato o de la autoridad delegada</button>
+<button class="option" onclick="answer(this,false,'q1')"><span class="option-letter">D</span>Conflictos entre miembros durante el culto</button>
+</div><div class="feedback" id="fb1"><div class="feedback-title">Reflexión</div><div class="feedback-text">El fuego extraño no es necesariamente algo malo en apariencia; puede verse muy espiritual. La diferencia está en el origen: ¿viene de una revelación y dirección divina, o de la iniciativa humana fuera del orden de Dios?</div></div><div class="nav-buttons"><button class="btn" disabled>← Anterior</button><button class="btn btn-primary" id="next1" onclick="next(1)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q2"><div class="question-number">Pregunta 02</div><p class="question-text">Jesús dijo: 'No puede el Hijo hacer nada por sí mismo, sino lo que ve hacer al Padre' (Juan 5:19). ¿Qué principio establece esto para el servicio?</p><div class="options">
+<button class="option" onclick="answer(this,true,'q2')"><span class="option-letter">A</span>Que si el Hijo eterno no actuaba independientemente del Padre, cuánto más nosotros debemos servir bajo dirección y autoridad divina</button>
+<button class="option" onclick="answer(this,false,'q2')"><span class="option-letter">B</span>Que Jesús tenía limitaciones por su naturaleza humana</button>
+<button class="option" onclick="answer(this,false,'q2')"><span class="option-letter">C</span>Que debemos imitar físicamente lo que vemos hacer a otros líderes</button>
+<button class="option" onclick="answer(this,false,'q2')"><span class="option-letter">D</span>Que el servicio solo es válido cuando recibimos una visión o sueño</button>
+</div><div class="feedback" id="fb2"><div class="feedback-title">Reflexión</div><div class="feedback-text">Si el Hijo eterno no actuaba independientemente del Padre, cuánto más nosotros debemos servir bajo dirección y autoridad divina. No todo activismo espiritual es obediencia; podemos estar muy ocupados pero haciendo fuego extraño.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(2)">← Anterior</button><button class="btn btn-primary" id="next2" onclick="next(2)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q3"><div class="question-number">Pregunta 03</div><p class="question-text">¿Cuál fue el error específico de Nadab y Abiú en Levítico 10:1?</p><div class="options">
+<button class="option" onclick="answer(this,true,'q3')"><span class="option-letter">A</span>Ofrecer incienso con fuego que Dios no había autorizado, actuando fuera del mandato divino y sin cobertura</button>
+<button class="option" onclick="answer(this,false,'q3')"><span class="option-letter">B</span>Usar incienso de mala calidad</button>
+<button class="option" onclick="answer(this,false,'q3')"><span class="option-letter">C</span>Entrar al tabernáculo sin preparación espiritual</button>
+<button class="option" onclick="answer(this,false,'q3')"><span class="option-letter">D</span>Interrumpir el culto que estaba dirigiendo Aarón</button>
+</div><div class="feedback" id="fb3"><div class="feedback-title">Reflexión</div><div class="feedback-text">El problema no fue el incienso en sí —era parte del culto legítimo— sino actuar fuera del mandato divino, fuera de cobertura. Sustituyeron la obediencia por creatividad personal y trataron lo santo con ligereza.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(3)">← Anterior</button><button class="btn btn-primary" id="next3" onclick="next(3)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q4"><div class="question-number">Pregunta 04</div><p class="question-text">¿Cuáles fueron los tres principales errores de Nadab y Abiú?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q4')"><span class="option-letter">A</span>Arrogancia, impaciencia y desobediencia parcial</button>
+<button class="option" onclick="answer(this,false,'q4')"><span class="option-letter">B</span>Envidia del sacerdocio de Aarón, ambición de liderazgo y falta de ayuno</button>
+<button class="option" onclick="answer(this,false,'q4')"><span class="option-letter">C</span>Entrar ebrios, actuar impulsivamente y no pedir perdón</button>
+<button class="option" onclick="answer(this,true,'q4')"><span class="option-letter">D</span>Ofrecer fuego no autorizado, actuar con irreverencia ante la santidad de Dios, y desobedecer directamente la Palabra de Dios</button>
+</div><div class="feedback" id="fb4"><div class="feedback-title">Reflexión</div><div class="feedback-text">El mismo fuego que antes manifestó la gloria de Dios (Lev. 9:24) los quemó a ellos por irreverentes. La gracia de Dios no elimina la santidad y la obediencia que se demanda en el servicio.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(4)">← Anterior</button><button class="btn btn-primary" id="next4" onclick="next(4)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q5"><div class="question-number">Pregunta 05</div><p class="question-text">¿Cuándo se convierte un ayuno grupal en 'fuego extraño'?</p><div class="options"><button class="option" onclick="answer(this,false,'q5')"><span class="option-letter">A</span>Cuando dura más de tres días</button>
+<button class="option" onclick="answer(this,true,'q5')"><span class="option-letter">B</span>Cuando sale del deseo de una persona o grupo sin autorización de los pastores, generando una élite espiritual secreta</button>
+<button class="option" onclick="answer(this,false,'q5')"><span class="option-letter">C</span>Cuando no va acompañado de oración intercesora</button>
+<button class="option" onclick="answer(this,false,'q5')"><span class="option-letter">D</span>Cuando no todos los miembros de la iglesia participan</button>
+</div><div class="feedback" id="fb5"><div class="feedback-title">Reflexión</div><div class="feedback-text">Hechos 13:2-3 muestra que los ayunos corporativos estaban ligados a dirección espiritual y liderazgo. Un ayuno sin sujeción puede convertirse en esfuerzo carnal, aunque tenga apariencia espiritual.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(5)">← Anterior</button><button class="btn btn-primary" id="next5" onclick="next(5)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q6"><div class="question-number">Pregunta 06</div><p class="question-text">¿Cuál es la distinción entre una vigilia bíblica y una que se convierte en 'fuego extraño'?</p><div class="options"><button class="option" onclick="answer(this,false,'q6')"><span class="option-letter">A</span>La duración y la cantidad de personas que participan</button>
+<button class="option" onclick="answer(this,true,'q6')"><span class="option-letter">B</span>El fuego extraño surge cuando la vigilia se organiza sin informar ni someterse a los pastores, creando un grupo paralelo dentro de la iglesia</button>
+<button class="option" onclick="answer(this,false,'q6')"><span class="option-letter">C</span>El tipo de música o alabanza que se usa durante la vigilia</button>
+<button class="option" onclick="answer(this,false,'q6')"><span class="option-letter">D</span>Si se realiza dentro o fuera del edificio de la iglesia</button>
+</div><div class="feedback" id="fb6"><div class="feedback-title">Reflexión</div><div class="feedback-text">Una vigilia sin cobertura es pecado intencional: independencia espiritual. Es el espíritu detrás del fuego extraño: hacer lo correcto, pero fuera de la autoridad espiritual. Sin cobertura puede haber mezcla doctrinal y división.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(6)">← Anterior</button><button class="btn btn-primary" id="next6" onclick="next(6)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q7"><div class="question-number">Pregunta 07</div><p class="question-text">¿Cómo puede un estudio bíblico grupal convertirse en 'fuego extraño'?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q7')"><span class="option-letter">A</span>Cuando se estudian libros difíciles de la Biblia sin un comentarista</button>
+<button class="option" onclick="answer(this,false,'q7')"><span class="option-letter">B</span>Cuando se reúne en casa en lugar del templo</button>
+<button class="option" onclick="answer(this,true,'q7')"><span class="option-letter">C</span>Cuando crea lealtad hacia una persona en lugar de hacia la iglesia, funciona como 'otra visión' dentro de la iglesia, y enseña sin supervisión pastoral</button>
+<button class="option" onclick="answer(this,false,'q7')"><span class="option-letter">D</span>Cuando no tiene un plan de estudio estructurado</button>
+</div><div class="feedback" id="fb7"><div class="feedback-title">Reflexión</div><div class="feedback-text">El estudio bíblico no puede funcionar fuera de la supervisión pastoral. Un estudio sin cobertura introduce interpretaciones privadas, desalineamiento doctrinal y confunde a creyentes nuevos y experimentados.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(7)">← Anterior</button><button class="btn btn-primary" id="next7" onclick="next(7)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q8"><div class="question-number">Pregunta 08</div><p class="question-text">La pregunta que el capítulo propone hacer antes de participar en cualquier actividad espiritual es triple. ¿Cuál de estas refleja mejor esas tres preguntas?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q8')"><span class="option-letter">A</span>¿Es bíblico? ¿Es seguro? ¿Es gratis?</button>
+<button class="option" onclick="answer(this,false,'q8')"><span class="option-letter">B</span>¿Es en la iglesia? ¿Hay alabanza? ¿Hay predicación de la Palabra?</button>
+<button class="option" onclick="answer(this,true,'q8')"><span class="option-letter">C</span>¿Lo están convocando los pastores? ¿La persona que lo inicia modela que está bajo cobertura? ¿Esto produce unidad o genera división?</button>
+<button class="option" onclick="answer(this,false,'q8')"><span class="option-letter">D</span>¿Lo conozco? ¿Lo entiendo? ¿Lo necesito?</button>
+</div><div class="feedback" id="fb8"><div class="feedback-title">Reflexión</div><div class="feedback-text">Estas tres preguntas son un filtro de discernimiento espiritual práctico. El fuego santo desciende; no se fabrica. La obediencia lo sostiene, la autoridad lo protege, la reverencia lo honra.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(8)">← Anterior</button><button class="btn btn-primary" id="next8" onclick="next(8)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q9"><div class="question-number">Pregunta 09</div><p class="question-text">¿Qué dice el capítulo sobre el peligro de que un líder pierda su vida devocional?</p><div class="options"><button class="option" onclick="answer(this,false,'q9')"><span class="option-letter">A</span>Que se volverá menos efectivo en la predicación</button>
+<button class="option" onclick="answer(this,true,'q9')"><span class="option-letter">B</span>Que comienza a producir fuego extraño; la mayor protección de la autoridad es su comunión secreta con Dios</button>
+<button class="option" onclick="answer(this,false,'q9')"><span class="option-letter">C</span>Que sus relaciones personales se deteriorarán</button>
+<button class="option" onclick="answer(this,false,'q9')"><span class="option-letter">D</span>Que perderá el respeto de su congregación</button>
+</div><div class="feedback" id="fb9"><div class="feedback-title">Reflexión</div><div class="feedback-text">Un líder que pierde su vida devocional comienza a producir fuego extraño. La mayor protección de la autoridad es su comunión secreta con Dios. El liderazgo que no instruye en obediencia prepara el terreno para el fuego extraño.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(9)">← Anterior</button><button class="btn btn-primary" id="next9" onclick="next(9)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q10"><div class="question-number">Pregunta 10</div><p class="question-text">¿Por qué el capítulo dice que 'no todo lo que arde viene del cielo'?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q10')"><span class="option-letter">A</span>Porque algunas experiencias emocionales en la iglesia no son del Espíritu Santo</button>
+<button class="option" onclick="answer(this,false,'q10')"><span class="option-letter">B</span>Porque el diablo puede imitar los dones del Espíritu</button>
+<button class="option" onclick="answer(this,false,'q10')"><span class="option-letter">C</span>Porque la emoción humana siempre contamina la adoración</button>
+<button class="option" onclick="answer(this,true,'q10')"><span class="option-letter">D</span>Porque hay fuegos que nacen del orgullo humano y la iniciativa independiente; la obediencia sostiene el fuego santo pero la rebeldía enciende fuego extraño</button>
+</div><div class="feedback" id="fb10"><div class="feedback-title">Reflexión</div><div class="feedback-text">Es mejor una llama pequeña enviada por Dios que un incendio grande provocado por iniciativa humana fuera del orden de Dios. No todo lo que parece espiritual proviene de Dios; la obediencia siempre vale más que la iniciativa religiosa.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(10)">← Anterior</button><button class="btn btn-primary" id="next10" onclick="next(10)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q11"><div class="question-number">Pregunta 11</div><p class="question-text">Reflexionando en tu vida: ¿Has iniciado o participado en alguna actividad espiritual sin comunicarlo ni alinearlo con tu autoridad pastoral?</p><div class="options">
+<button class="option" onclick="answer(this,true,'q11')"><span class="option-letter">A</span>No, siempre consulto antes de participar en actividades fuera de la iglesia</button>
+<button class="option" onclick="answer(this,true,'q11')"><span class="option-letter">B</span>No estoy seguro; nunca lo había pensado desde esta perspectiva</button>
+<button class="option" onclick="answer(this,true,'q11')"><span class="option-letter">C</span>Sí, y ahora entiendo que debo regularizar esa área de mi vida espiritual</button>
+<button class="option" onclick="answer(this,true,'q11')"><span class="option-letter">D</span>Sí, y en ese momento no lo vi como problema</button>
+</div><div class="feedback" id="fb11"><div class="feedback-title">Reflexión</div><div class="feedback-text">Toda respuesta honesta es válida. El capítulo nos invita a consagrar el altar: 'Señor, todo fuego que no proviene de Tu altar ni está bajo cobertura, ayúdame a no participar y apagarlo.'</div></div><div class="nav-buttons"><button class="btn" onclick="prev(11)">← Anterior</button><button class="btn btn-primary" id="next11" onclick="next(11)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q12"><div class="question-number">Pregunta 12</div><p class="question-text">¿Cuál es la oración de consagración que propone el capítulo al cerrar?</p><div class="options">
+<button class="option" onclick="answer(this,true,'q12')"><span class="option-letter">A</span>'Señor, todo fuego que no proviene de Tu altar ni está bajo cobertura, ayúdame a no participar. Prefiero una llama pequeña Tuya en bendición que un incendio mío sin respaldo'</button>
+<button class="option" onclick="answer(this,false,'q12')"><span class="option-letter">B</span>'Señor, ayúdame a discernir qué actividades son de Ti y cuáles no'</button>
+<button class="option" onclick="answer(this,false,'q12')"><span class="option-letter">C</span>'Señor, protégeme de los falsos profetas que quieren incendiar Tu iglesia'</button>
+<button class="option" onclick="answer(this,false,'q12')"><span class="option-letter">D</span>'Señor, dame el fuego del Espíritu Santo para avivar mi congregación'</button>
+</div><div class="feedback" id="fb12"><div class="feedback-title">Reflexión</div><div class="feedback-text">Esta oración refleja la postura correcta: preferir la pequeña llama enviada por Dios sobre el gran incendio generado por iniciativa humana. La cobertura es protección, no limitación. El orden es diseño divino, no opresión.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(12)">← Anterior</button><button class="btn btn-primary" onclick="showResults()">Ver resultados →</button></div></div>
+
+  <div class="results-card" id="results">
+    <div class="results-icon">✦</div>
+    <div class="results-label">Resultado Final — Capítulo 7</div>
+    <div class="results-score" id="score-display">0<span>/12</span></div>
+    <p class="results-message" id="results-message"></p>
+    <p class="results-verse">"El fuego extraño representa cualquier forma de adoración ofrecida a Dios según la voluntad del hombre, fuera de cobertura." — John MacArthur</p>
+    <div class="results-actions">
+      <button class="btn btn-light" onclick="restart()">Intentar de nuevo</button>
+      <button class="btn btn-primary" onclick="openShare('Fuego extraño en la iglesia', score, total)" style="background:#B8965A;border-color:#B8965A;color:#1A1510;">✉ Enviar resultados</button>
+      <a href="capitulo8.html" class="btn btn-primary" style="text-decoration:none;">Capítulo 8 →</a>
+      <a href="index.html" class="btn btn-light" style="text-decoration:none;">Ver todos</a>
+    </div>
+  </div>
+</div>
+<script>
+let current=1,score=0;const total=12,answered={};
+function answer(btn,isCorrect,qId){if(answered[qId])return;answered[qId]=true;const options=btn.parentElement.querySelectorAll('.option');options.forEach(o=>{o.disabled=true});const num=parseInt(qId.replace('q',''));if(isCorrect){btn.classList.add('correct');score++;document.getElementById('score-text').textContent=score+' correcta'+(score!==1?'s':'');}
+  // Record for share
+  const qCard=document.getElementById('q'+num);
+  const qText=qCard.querySelector('.question-text').textContent;
+  const fbText=qCard.querySelector('.feedback-text').textContent;
+  recordAnswer(num,qText,btn.querySelector('.option-letter').nextSibling?btn.textContent.trim().replace(/^[A-D]/,'').trim():btn.textContent.trim(),isCorrect,fbText);else{btn.classList.add('wrong');options.forEach(o=>{if(o.getAttribute('onclick').includes('true'))o.classList.add('correct')});}document.getElementById('fb'+num).classList.add('show');const nextBtn=document.getElementById('next'+num);if(nextBtn)nextBtn.disabled=false;if(num===total)document.querySelector('#q12 .btn-primary').disabled=false;}
+function next(n){document.getElementById('q'+n).classList.remove('active');current=n+1;document.getElementById('q'+current).classList.add('active');updateProgress();window.scrollTo({top:0,behavior:'smooth'});}
+function prev(n){document.getElementById('q'+n).classList.remove('active');current=n-1;document.getElementById('q'+current).classList.add('active');updateProgress();window.scrollTo({top:0,behavior:'smooth'});}
+function updateProgress(){document.getElementById('progress-text').textContent='Pregunta '+current+' de '+total;document.getElementById('progress-fill').style.width=((current-1)/total*100)+'%';}
+function showResults(){document.getElementById('q12').classList.remove('active');const r=document.getElementById('results');r.classList.add('show');document.getElementById('score-display').innerHTML=score+'<span>/'+total+'</span>';let msg='';if(score>=10)msg='Excelente. Este capítulo ha calado profundo en tu comprensión. Que esta verdad se convierta en obediencia activa.';else if(score>=7)msg='Buen avance. Te invitamos a releer las secciones donde dudaste y llevarlas a la oración.';else msg='Este capítulo tiene mucho más para darte. Vuelve a leerlo con calma y pídele a Dios revelación, no solo información.';document.getElementById('results-message').textContent=msg;document.getElementById('progress-fill').style.width='100%';window.scrollTo({top:0,behavior:'smooth'});}
+function restart(){location.reload();}
+updateProgress();document.querySelector('#q12 .btn-primary').disabled=true;
+
+// ── Share functionality ──────────────────────────────────────────────
+
+// Store answer data per question
+const questionData = {};
+function recordAnswer(qNum, questionText, selectedText, isCorrect, feedbackText) {
+  questionData[qNum] = { questionText, selectedText, isCorrect, feedbackText };
+}
+
+function buildSummary(chapterTitle, scoreVal, totalVal) {
+  const pct = Math.round((scoreVal / totalVal) * 100);
+  let summary = '== EN AUTORIDAD & BAJO AUTORIDAD ==\n';
+  summary += 'Milton Valle\n\n';
+  summary += `Capítulo: ${chapterTitle}\n`;
+  summary += `Nota: ${scoreVal}/${totalVal} (${pct}%)\n`;
+  summary += '─────────────────────────────\n\n';
+
+  const keys = Object.keys(questionData).map(Number).sort((a,b)=>a-b);
+  keys.forEach(n => {
+    const d = questionData[n];
+    const status = d.isCorrect ? '✓' : '✗';
+    summary += `${status} Pregunta ${n}: ${d.questionText}\n`;
+    summary += `   Mi respuesta: ${d.selectedText}\n`;
+    summary += `   Reflexión: ${d.feedbackText}\n\n`;
+  });
+
+  summary += '─────────────────────────────\n';
+  if (pct >= 83) summary += '"El que sabe obedecer en lo secreto, será establecido por Dios en lo público."';
+  else summary += '"Prefiero ser formado bajo Tu autoridad que usado sin estar rendido a Tu voluntad."';
+  summary += '\n— En Autoridad & Bajo Autoridad — Milton Valle';
+  return summary;
+}
+
+let currentSummary = '';
+let currentChapterTitle = '';
+
+function openShare(chapterTitle, scoreVal, totalVal) {
+  currentChapterTitle = chapterTitle;
+  currentSummary = buildSummary(chapterTitle, scoreVal, totalVal);
+  document.getElementById('shareModalTitle').textContent = `Capítulo: ${chapterTitle}`;
+  document.getElementById('shareOverlay').classList.add('show');
+  document.getElementById('shareForm').style.display = 'block';
+  document.getElementById('shareSuccess').classList.remove('show');
+}
+
+function closeShare() {
+  document.getElementById('shareOverlay').classList.remove('show');
+}
+
+function closeShareIfOutside(e) {
+  if (e.target === document.getElementById('shareOverlay')) closeShare();
+}
+
+function sendEmail() {
+  const email = document.getElementById('shareEmail').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('shareEmail').style.borderColor = '#7A1F1F';
+    document.getElementById('shareEmail').focus();
+    return;
+  }
+  document.getElementById('shareEmail').style.borderColor = '';
+
+  const subject = encodeURIComponent(`Mi resultado — ${currentChapterTitle} | En Autoridad & Bajo Autoridad`);
+  const body = encodeURIComponent(currentSummary);
+  const mailto = `mailto:${email}?subject=${subject}&body=${body}`;
+  window.location.href = mailto;
+
+  showSuccess('Tu cliente de correo abrirá en un momento con el resumen listo para enviar.');
+}
+
+function sendSMS() {
+  const phone = document.getElementById('sharePhone').value.trim().replace(/\s/g,'');
+  if (!phone) {
+    document.getElementById('sharePhone').style.borderColor = '#7A1F1F';
+    document.getElementById('sharePhone').focus();
+    return;
+  }
+  document.getElementById('sharePhone').style.borderColor = '';
+
+  const keys = Object.keys(questionData).map(Number).sort((a,b)=>a-b);
+  const correct2 = keys.filter(n => questionData[n].isCorrect).length;
+  const pct = Math.round((correct2/keys.length)*100);
+
+  let smsBody = `En Autoridad & Bajo Autoridad — Milton Valle\n`;
+  smsBody += `Capítulo: ${currentChapterTitle}\n`;
+  smsBody += `Nota: ${correct2}/${keys.length} (${pct}%)\n\n`;
+  keys.forEach(n => {
+    const d = questionData[n];
+    smsBody += `${d.isCorrect ? '✓' : '✗'} P${n}: ${d.selectedText}\n`;
+    smsBody += `   → ${d.feedbackText}\n\n`;
+  });
+  if (pct >= 83) smsBody += '"El que sabe obedecer en lo secreto, será establecido por Dios en lo público."';
+  else smsBody += '"Prefiero ser formado bajo Tu autoridad que usado sin estar rendido a Tu voluntad."';
+  smsBody += '\n— En Autoridad & Bajo Autoridad';
+
+  const encoded = encodeURIComponent(smsBody);
+  window.location.href = `sms:${phone}?body=${encoded}`;
+  showSuccess('Tu aplicación de mensajes se abrirá con el resumen completo y todas las reflexiones.');
+}
+
+function copyToClipboard() {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(currentSummary).then(() => {
+      showSuccess('Resultados copiados al portapapeles. Puedes pegarlo donde quieras.');
+    }).catch(() => fallbackCopy());
+  } else {
+    fallbackCopy();
+  }
+}
+
+function fallbackCopy() {
+  const ta = document.createElement('textarea');
+  ta.value = currentSummary;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try {
+    document.execCommand('copy');
+    showSuccess('Resultados copiados al portapapeles. Puedes pegarlo donde quieras.');
+  } catch(e) {
+    showSuccess('No se pudo copiar automáticamente. Selecciona el texto manualmente.');
+  }
+  document.body.removeChild(ta);
+}
+
+function showSuccess(msg) {
+  document.getElementById('shareForm').style.display = 'none';
+  const s = document.getElementById('shareSuccess');
+  document.getElementById('shareSuccessText').textContent = msg;
+  s.classList.add('show');
+  setTimeout(() => closeShare(), 3500);
+}
+
+</script>
+
+<!-- Share Modal -->
+<div class="share-overlay" id="shareOverlay" onclick="closeShareIfOutside(event)">
+  <div class="share-modal" id="shareModal">
+    <button class="share-close" onclick="closeShare()">✕</button>
+    <div id="shareForm">
+      <div class="share-title">Compartir resultados</div>
+      <div class="share-subtitle" id="shareModalTitle">Envía tu nota y reflexiones</div>
+
+      <label class="share-field-label" for="shareEmail">Correo electrónico</label>
+      <input class="share-input" type="email" id="shareEmail" placeholder="tu@correo.com">
+
+      <button class="share-btn share-btn-email" onclick="sendEmail()">
+        ✉ Enviar por correo
+      </button>
+
+      <div class="share-divider">
+        <div class="share-divider-line"></div>
+        <div class="share-divider-text">o por</div>
+        <div class="share-divider-line"></div>
+      </div>
+
+      <label class="share-field-label" for="sharePhone">Número de teléfono</label>
+      <input class="share-input" type="tel" id="sharePhone" placeholder="+1 (555) 000-0000">
+
+      <button class="share-btn share-btn-sms" onclick="sendSMS()">
+        💬 Enviar por mensaje de texto
+      </button>
+
+      <div class="share-divider" style="margin-top:16px">
+        <div class="share-divider-line"></div>
+        <div class="share-divider-text">o simplemente</div>
+        <div class="share-divider-line"></div>
+      </div>
+
+      <button class="share-btn share-btn-copy" onclick="copyToClipboard()">
+        ⎘ Copiar resultados al portapapeles
+      </button>
+
+      <p class="share-note">El resumen incluye tu nota, las preguntas y las reflexiones del capítulo.</p>
+    </div>
+    <div class="share-success" id="shareSuccess">
+      <div class="share-success-icon">✦</div>
+      <p class="share-success-text" id="shareSuccessText"></p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

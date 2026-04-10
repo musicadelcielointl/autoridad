@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capítulo 11 — La Autoridad debe respetar la Autoridad</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root{--cream:#F5F0E8;--dark:#1A1510;--gold:#B8965A;--gold-light:#D4B483;--gold-pale:#EDD99A;--burgundy:#5C2E2E;--text:#2C2416;--muted:#7A6E5F;--correct:#2D5A27;--wrong:#7A1F1F;--card-bg:#FFFDF8}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background-color:var(--cream);color:var(--text);font-family:'Lato',sans-serif;font-weight:300;min-height:100vh;background-image:radial-gradient(ellipse at 10% 20%,rgba(184,150,90,.06) 0%,transparent 60%),radial-gradient(ellipse at 90% 80%,rgba(92,46,46,.05) 0%,transparent 60%)}
+  .top-bar{background:var(--dark);padding:12px 40px;display:flex;align-items:center;justify-content:space-between}
+  .top-bar .series{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
+  .top-bar .nav-link{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;color:var(--gold-light);text-decoration:none;opacity:.8;transition:opacity .2s}
+  .top-bar .nav-link:hover{opacity:1}
+  .hero{text-align:center;padding:60px 40px 40px}
+  .chapter-label{font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:16px;display:block}
+  .chapter-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,5vw,48px);font-weight:300;color:var(--dark);line-height:1.2;margin-bottom:12px}
+  .chapter-title em{font-style:italic;color:var(--burgundy)}
+  .divider{display:flex;align-items:center;justify-content:center;gap:16px;margin:24px auto;max-width:300px}
+  .divider-line{flex:1;height:1px;background:var(--gold-light);opacity:.5}
+  .divider-diamond{width:6px;height:6px;background:var(--gold);transform:rotate(45deg)}
+  .subtitle{font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:var(--muted);max-width:520px;margin:0 auto 8px;line-height:1.7}
+  .progress-container{max-width:680px;margin:0 auto 40px;padding:0 40px}
+  .progress-info{display:flex;justify-content:space-between;font-size:12px;letter-spacing:1px;color:var(--muted);margin-bottom:8px;font-family:'Cinzel',serif}
+  .progress-bar{height:3px;background:rgba(184,150,90,.2);border-radius:2px;overflow:hidden}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-pale));border-radius:2px;transition:width .5s ease;width:0%}
+  .quiz-container{max-width:680px;margin:0 auto;padding:0 24px 80px}
+  .question-card{background:var(--card-bg);border:1px solid rgba(184,150,90,.2);border-radius:2px;padding:36px 40px;margin-bottom:24px;display:none;animation:fadeSlide .4s ease forwards;box-shadow:0 4px 24px rgba(26,21,16,.06);position:relative}
+  .question-card.active{display:block}
+  .question-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,var(--gold),transparent);border-radius:2px 0 0 2px}
+  @keyframes fadeSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .question-number{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:14px}
+  .question-text{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:400;line-height:1.55;color:var(--dark);margin-bottom:28px}
+  .options{display:flex;flex-direction:column;gap:10px}
+  .option{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;border:1px solid rgba(184,150,90,.25);border-radius:2px;cursor:pointer;transition:all .2s ease;background:transparent;text-align:left;width:100%;font-family:'Lato',sans-serif;font-size:14px;font-weight:300;color:var(--text);line-height:1.5}
+  .option:hover:not(:disabled){border-color:var(--gold);background:rgba(184,150,90,.05)}
+  .option-letter{font-family:'Cinzel',serif;font-size:11px;color:var(--gold);min-width:18px;margin-top:1px}
+  .option.correct{border-color:var(--correct);background:rgba(45,90,39,.06);color:var(--correct)}
+  .option.wrong{border-color:var(--wrong);background:rgba(122,31,31,.06);color:var(--wrong)}
+  .option:disabled{cursor:default}
+  .feedback{display:none;margin-top:20px;padding:16px 20px;border-left:3px solid var(--gold);background:rgba(184,150,90,.06);border-radius:0 2px 2px 0}
+  .feedback.show{display:block;animation:fadeSlide .3s ease forwards}
+  .feedback-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;color:var(--gold);margin-bottom:6px}
+  .feedback-text{font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:var(--muted);line-height:1.65}
+  .nav-buttons{display:flex;justify-content:space-between;align-items:center;margin-top:28px}
+  .btn{font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:12px 28px;border:1px solid var(--gold);background:transparent;color:var(--gold);cursor:pointer;transition:all .2s ease;border-radius:1px}
+  .btn:hover{background:var(--gold);color:var(--dark)}
+  .btn:disabled{opacity:.3;cursor:default}
+  .btn-primary{background:var(--dark);color:var(--gold-light);border-color:var(--dark)}
+  .btn-primary:hover{background:var(--gold);color:var(--dark);border-color:var(--gold)}
+  .results-card{display:none;background:var(--dark);border-radius:2px;padding:56px 40px;text-align:center;animation:fadeSlide .5s ease forwards}
+  .results-card.show{display:block}
+  .results-icon{font-size:48px;margin-bottom:20px}
+  .results-label{font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--gold);margin-bottom:12px}
+  .results-score{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:300;color:var(--cream);line-height:1;margin-bottom:8px}
+  .results-score span{font-size:32px;color:var(--gold-light)}
+  .results-message{font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:var(--gold-light);margin:20px auto;max-width:420px;line-height:1.6}
+  .results-verse{font-family:'Cormorant Garamond',serif;font-size:15px;color:rgba(245,240,232,.5);font-style:italic;margin-top:28px}
+  .results-actions{display:flex;gap:16px;justify-content:center;margin-top:36px;flex-wrap:wrap}
+  .btn-light{border-color:var(--gold-light);color:var(--gold-light)}
+  .btn-light:hover{background:var(--gold-light);color:var(--dark)}
+  @media(max-width:600px){.hero{padding:40px 24px 24px}.question-card{padding:28px 24px}.top-bar{padding:12px 24px}.progress-container{padding:0 24px}}
+
+  /* Share modal */
+  .share-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26,21,16,0.92);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    backdrop-filter: blur(4px);
+  }
+  .share-overlay.show { display: flex; }
+  .share-modal {
+    background: #FFFDF8;
+    border-radius: 2px;
+    padding: 40px;
+    max-width: 440px;
+    width: 100%;
+    position: relative;
+    animation: fadeSlide 0.3s ease forwards;
+    box-shadow: 0 24px 80px rgba(26,21,16,0.5);
+  }
+  .share-close {
+    position: absolute;
+    top: 16px; right: 20px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #7A6E5F;
+    line-height: 1;
+  }
+  .share-title {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: #B8965A;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .share-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    color: #1A1510;
+    margin-bottom: 24px;
+    line-height: 1.3;
+  }
+  .share-field-label {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: #7A6E5F;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .share-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid rgba(184,150,90,0.35);
+    border-radius: 2px;
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: #2C2416;
+    background: transparent;
+    margin-bottom: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .share-input:focus { border-color: #B8965A; }
+  .share-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 4px 0 16px;
+  }
+  .share-divider-line { flex:1; height:1px; background: rgba(184,150,90,0.2); }
+  .share-divider-text {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: #B8965A;
+    opacity: 0.6;
+  }
+  .share-buttons { display: flex; flex-direction: column; gap: 10px; }
+  .share-btn {
+    width: 100%;
+    padding: 13px 20px;
+    border-radius: 2px;
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+    border: none;
+  }
+  .share-btn-email {
+    background: #1A1510;
+    color: #D4B483;
+  }
+  .share-btn-email:hover { background: #B8965A; color: #1A1510; }
+  .share-btn-sms {
+    background: transparent;
+    border: 1px solid rgba(184,150,90,0.4);
+    color: #B8965A;
+  }
+  .share-btn-sms:hover { background: rgba(184,150,90,0.08); border-color: #B8965A; }
+  .share-btn-copy {
+    background: transparent;
+    border: 1px solid rgba(184,150,90,0.2);
+    color: #7A6E5F;
+    font-size: 9px;
+  }
+  .share-btn-copy:hover { border-color: rgba(184,150,90,0.5); color: #B8965A; }
+  .share-note {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-style: italic;
+    color: #7A6E5F;
+    margin-top: 16px;
+    text-align: center;
+    line-height: 1.5;
+  }
+  .share-success {
+    display: none;
+    text-align: center;
+    padding: 16px;
+  }
+  .share-success.show { display: block; }
+  .share-success-icon { font-size: 32px; margin-bottom: 8px; }
+  .share-success-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: #2D5A27;
+  }
+
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <span class="series">En Autoridad &amp; Bajo Autoridad — Milton Valle</span>
+  <a href="index.html" class="nav-link">← Todos los capítulos</a>
+</div>
+<div class="hero">
+  <span class="chapter-label">Capítulo 11</span>
+  <h1 class="chapter-title">La Autoridad debe respetar la <em>Autoridad</em></h1>
+  <div class="divider"><div class="divider-line"></div><div class="divider-diamond"></div><div class="divider-line"></div></div>
+  <p class="subtitle">¡Dios no exalta a rebeldes talentosos; exalta a sus siervos obedientes!</p>
+</div>
+<div class="progress-container">
+  <div class="progress-info"><span id="progress-text">Pregunta 1 de 12</span><span id="score-text">0 correctas</span></div>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+<div class="quiz-container">
+  <div class="question-card active" id="q1"><div class="question-number">Pregunta 01</div><p class="question-text">¿Cuál fue el pecado específico de Saúl en su primera misión (1 Samuel 13), que marcó el inicio de su caída?</p><div class="options"><button class="option" onclick="answer(this,true,'q1')"><span class="option-letter">A</span>Ofreció el sacrificio antes de la batalla por impaciencia y miedo a perder al pueblo, tomando una función que solo le correspondía a Samuel como sacerdote</button>
+<button class="option" onclick="answer(this,false,'q1')"><span class="option-letter">B</span>Atacó a los filisteos antes de recibir la orden de Dios</button>
+<button class="option" onclick="answer(this,false,'q1')"><span class="option-letter">C</span>No distribuyó el botín de guerra de manera justa</button>
+<button class="option" onclick="answer(this,false,'q1')"><span class="option-letter">D</span>Consultó a sus soldados en lugar de buscar a Dios directamente</button>
+</div><div class="feedback" id="fb1"><div class="feedback-title">Reflexión</div><div class="feedback-text">Samuel le había dicho a Saúl que esperara siete días. Saúl no esperó y ofreció él mismo el sacrificio —una función que solo le correspondía al profeta o sacerdote. Cuando un líder teme perder aceptación, comienza a negociar la obediencia.</div></div><div class="nav-buttons"><button class="btn" disabled>← Anterior</button><button class="btn btn-primary" id="next1" onclick="next(1)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q2"><div class="question-number">Pregunta 02</div><p class="question-text">¿Qué frase del capítulo resume la norma de obediencia en el liderazgo espiritual?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q2')"><span class="option-letter">A</span>'El 80% de obediencia es suficiente para mantener el respaldo de Dios'</button>
+<button class="option" onclick="answer(this,false,'q2')"><span class="option-letter">B</span>'Los errores ocasionales son parte del proceso de aprendizaje del líder'</button>
+<button class="option" onclick="answer(this,true,'q2')"><span class="option-letter">C</span>'En el Reino de Dios, obediencia parcial es igual a desobediencia; fidelidad parcial es igual a infidelidad'</button>
+<button class="option" onclick="answer(this,false,'q2')"><span class="option-letter">D</span>'Lo importante es la intención del corazón, no la perfección en los detalles'</button>
+</div><div class="feedback" id="fb2"><div class="feedback-title">Reflexión</div><div class="feedback-text">Saúl podía cometer errores; lo peligroso fue que los justificó en vez de reconocerlos. El liderazgo que busca agradar a las personas terminará desagradando a Dios. La obediencia parcial —aunque venga con buenas intenciones— sigue siendo desobediencia.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(2)">← Anterior</button><button class="btn btn-primary" id="next2" onclick="next(2)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q3"><div class="question-number">Pregunta 03</div><p class="question-text">Aunque David sabía que había sido ungido como rey, ¿cómo se comportó cuando sirvió bajo Saúl?</p><div class="options"><button class="option" onclick="answer(this,false,'q3')"><span class="option-letter">A</span>Buscó aliados que lo apoyaran para reclamar su derecho al trono</button>
+<button class="option" onclick="answer(this,true,'q3')"><span class="option-letter">B</span>Nunca fanfarroneó de su unción, no se portó rebeldemente y se desempeñó con fidelidad en todo lo que Saúl le encomendaba</button>
+<button class="option" onclick="answer(this,false,'q3')"><span class="option-letter">C</span>Evitó toda interacción con Saúl para no generar conflicto</button>
+<button class="option" onclick="answer(this,false,'q3')"><span class="option-letter">D</span>Esperó pacientemente hasta que Saúl cometiera un error grave para actuar</button>
+</div><div class="feedback" id="fb3"><div class="feedback-title">Reflexión</div><div class="feedback-text">David aunque sabía que también había sido ungido como rey al igual que Saúl, nunca fanfarroneó de ello. Solo se portó prudentemente y era acepto a los ojos de todo el pueblo y de los siervos de Saúl. La unción no le dio licencia para la rebelión.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(3)">← Anterior</button><button class="btn btn-primary" id="next3" onclick="next(3)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q4"><div class="question-number">Pregunta 04</div><p class="question-text">En la primera oportunidad de matar a Saúl (1 Samuel 24), ¿qué reveló el corazón de David cuando se turbó por haber cortado el manto?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q4')"><span class="option-letter">A</span>Que tenía miedo de las consecuencias legales de matar al rey</button>
+<button class="option" onclick="answer(this,false,'q4')"><span class="option-letter">B</span>Que dudaba de su propia unción como futuro rey</button>
+<button class="option" onclick="answer(this,true,'q4')"><span class="option-letter">C</span>Que su conciencia era fina: un verdadero líder no necesita cometer un gran pecado para sentirse inquieto; su sensibilidad espiritual lo detuvo antes de ir más lejos</button>
+<button class="option" onclick="answer(this,false,'q4')"><span class="option-letter">D</span>Que respetaba a Saúl como persona, aunque no como rey</button>
+</div><div class="feedback" id="fb4"><div class="feedback-title">Reflexión</div><div class="feedback-text">Un verdadero líder no necesita cometer un gran pecado para sentirse inquieto; su conciencia es fina. El hecho de que una autoridad no sea ejemplo no nos autoriza a irrespetar su investidura, tampoco a dañar su imagen.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(4)">← Anterior</button><button class="btn btn-primary" id="next4" onclick="next(4)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q5"><div class="question-number">Pregunta 05</div><p class="question-text">En la segunda oportunidad de matar a Saúl (1 Samuel 26), David detuvo a Abisai que quería herirlo. ¿Qué demostró esto sobre su integridad?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q5')"><span class="option-letter">A</span>Que tenía más misericordia que Abisai</button>
+<button class="option" onclick="answer(this,false,'q5')"><span class="option-letter">B</span>Que no confiaba en la capacidad militar de Abisai</button>
+<button class="option" onclick="answer(this,false,'q5')"><span class="option-letter">C</span>Que prefería esperar un momento más conveniente</button>
+<button class="option" onclick="answer(this,true,'q5')"><span class="option-letter">D</span>Que su respeto por la autoridad era un principio consistente, no una reacción emocional aislada; un líder íntegro no actúa correctamente solo una vez</button>
+</div><div class="feedback" id="fb5"><div class="feedback-title">Reflexión</div><div class="feedback-text">No fue una reacción emocional aislada como la primera vez. Ahora es una decisión firme y repetida. David demuestra que su respeto por la autoridad no era circunstancial, sino un principio. Un líder verdadero mantiene el estándar aunque la injusticia continúe.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(5)">← Anterior</button><button class="btn btn-primary" id="next5" onclick="next(5)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q6"><div class="question-number">Pregunta 06</div><p class="question-text">David expresó los tres posibles finales de Saúl: que Dios lo hiriera, que llegara su día de muerte, o que muriera en batalla. ¿Qué principio espiritual enseña esto?</p><div class="options"><button class="option" onclick="answer(this,false,'q6')"><span class="option-letter">A</span>Que David era profeta y podía ver el futuro de Saúl</button>
+<button class="option" onclick="answer(this,true,'q6')"><span class="option-letter">B</span>Que la venganza y el juicio le corresponden a Dios; el discípulo no ejecuta el juicio aunque tenga razón</button>
+<button class="option" onclick="answer(this,false,'q6')"><span class="option-letter">C</span>Que David no tenía la fe suficiente para creer que Dios lo pondría como rey</button>
+<button class="option" onclick="answer(this,false,'q6')"><span class="option-letter">D</span>Que el tiempo siempre resuelve los problemas sin necesidad de intervención</button>
+</div><div class="feedback" id="fb6"><div class="feedback-title">Reflexión</div><div class="feedback-text">La venganza acelera procesos que Dios quiere manejar soberanamente. No le corresponde al discípulo o al líder bajo autoridad ejecutar el juicio. El líder espiritual descansa en que Dios sabe cuándo terminar un ciclo y cuándo abre uno nuevo.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(6)">← Anterior</button><button class="btn btn-primary" id="next6" onclick="next(6)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q7"><div class="question-number">Pregunta 07</div><p class="question-text">¿Por qué el capítulo dice que 'el mayor peligro para un líder no es una autoridad defectuosa sobre él, sino un corazón impaciente dentro de él'?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q7')"><span class="option-letter">A</span>Porque la impaciencia lleva a errores estratégicos en la toma de decisiones</button>
+<button class="option" onclick="answer(this,false,'q7')"><span class="option-letter">B</span>Porque la impaciencia genera conflictos innecesarios con los compañeros</button>
+<button class="option" onclick="answer(this,true,'q7')"><span class="option-letter">C</span>Porque el corazón impaciente buscará atajos que comprometan la integridad y la obediencia, perdiendo lo que Dios quería darle en el tiempo correcto</button>
+<button class="option" onclick="answer(this,false,'q7')"><span class="option-letter">D</span>Porque las autoridades defectuosas son una realidad que no podemos cambiar</button>
+</div><div class="feedback" id="fb7"><div class="feedback-title">Reflexión</div><div class="feedback-text">David estaba siendo preparado para reinar y la prueba no era matar a su enemigo sino dominar su propia ambición. El mayor peligro para un líder no es una autoridad defectuosa sobre él, sino un corazón impaciente dentro de él.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(7)">← Anterior</button><button class="btn btn-primary" id="next7" onclick="next(7)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q8"><div class="question-number">Pregunta 08</div><p class="question-text">¿Cuál fue el final de Saúl y qué ilustra sobre el liderazgo que no respeta la autoridad?</p><div class="options">
+<button class="option" onclick="answer(this,true,'q8')"><span class="option-letter">A</span>Su liderazgo murió mucho antes que él: la desobediencia repetida, el alejamiento del Espíritu, los celos y la persecución de David fueron las etapas de una caída interna prolongada que culminó en su muerte y el fin de su linaje</button>
+<button class="option" onclick="answer(this,false,'q8')"><span class="option-letter">B</span>Murió heroicamente en batalla, demostrando valentía al final</button>
+<button class="option" onclick="answer(this,false,'q8')"><span class="option-letter">C</span>Murió en paz, habiendo reconocido al final sus errores</button>
+<button class="option" onclick="answer(this,false,'q8')"><span class="option-letter">D</span>Fue depuesto por el pueblo antes de morir en batalla</button>
+</div><div class="feedback" id="fb8"><div class="feedback-title">Reflexión</div><div class="feedback-text">Saúl murió en el campo de batalla, pero su liderazgo murió mucho antes. Su derrota externa fue el resultado de una caída interna prolongada. Lo que comienza como una pequeña concesión termina mal. El linaje de Saúl quedó extinguido.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(8)">← Anterior</button><button class="btn btn-primary" id="next8" onclick="next(8)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q9"><div class="question-number">Pregunta 09</div><p class="question-text">¿Cuál es la dimensión eterna de la promesa hecha a David que el capítulo destaca?</p><div class="options">
+<button class="option" onclick="answer(this,true,'q9')"><span class="option-letter">A</span>Que el trono de David se perpetuó en el Mesías: Jesús es 'Hijo de David' e 'Heredero del trono de David', haciendo el cumplimiento no solo político sino profético y eterno</button>
+<button class="option" onclick="answer(this,false,'q9')"><span class="option-letter">B</span>Que la familia de David sería la más rica de Israel por generaciones</button>
+<button class="option" onclick="answer(this,false,'q9')"><span class="option-letter">C</span>Que todos los descendientes de David serían reyes de Israel</button>
+<button class="option" onclick="answer(this,false,'q9')"><span class="option-letter">D</span>Que la promesa garantizaba paz permanente para la nación de Israel</button>
+</div><div class="feedback" id="fb9"><div class="feedback-title">Reflexión</div><div class="feedback-text">La diferencia entre Saúl y David no fue perfección, sino obediencia y alineación con el corazón de Dios. Saúl perdió la dinastía. David aseguró una descendencia por la eternidad. El Señor Jesús es su descendiente, haciendo el cumplimiento eterno.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(9)">← Anterior</button><button class="btn btn-primary" id="next9" onclick="next(9)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q10"><div class="question-number">Pregunta 10</div><p class="question-text">¿Cuáles son las 'lecciones profundas para liderazgo espiritual' que el capítulo extrae de la vida de David?</p><div class="options"><button class="option" onclick="answer(this,false,'q10')"><span class="option-letter">A</span>Que el talento supera siempre a la autoridad imperfecta</button>
+<button class="option" onclick="answer(this,true,'q10')"><span class="option-letter">B</span>Que puedes estar ungido y aun así esperar; tener razón y aun así someterte; sufrir injusticia y no vengarte; ver el error de una autoridad y honrar su posición</button>
+<button class="option" onclick="answer(this,false,'q10')"><span class="option-letter">C</span>Que la victoria siempre llega a quienes esperan sin hacer nada</button>
+<button class="option" onclick="answer(this,false,'q10')"><span class="option-letter">D</span>Que la sumisión a autoridades injustas es solo para líderes que aspiran al trono</button>
+</div><div class="feedback" id="fb10"><div class="feedback-title">Reflexión</div><div class="feedback-text">El problema hoy no es solo tener mala autoridad, sino no saber estar bajo autoridad. El que está bajo autoridad demuestra su carácter cuando esa autoridad falla. David nos enseña el camino: esperar sin amargarse, honrar sin idolatrar, confiar en la soberanía de Dios.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(10)">← Anterior</button><button class="btn btn-primary" id="next10" onclick="next(10)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q11"><div class="question-number">Pregunta 11</div><p class="question-text">Reflexionando: ¿Cuál de estas situaciones describes mejor tu relación actual con la autoridad que Dios puso sobre tu vida?</p><div class="options">
+<button class="option" onclick="answer(this,true,'q11')"><span class="option-letter">A</span>Me cuesta honrar la posición de una autoridad cuando veo sus errores personales</button>
+<button class="option" onclick="answer(this,true,'q11')"><span class="option-letter">B</span>Hay áreas donde he tomado justicia por mis propias manos en lugar de esperar a Dios</button>
+<button class="option" onclick="answer(this,true,'q11')"><span class="option-letter">C</span>Quiero comprometer esta área específica en oración esta semana</button>
+<button class="option" onclick="answer(this,true,'q11')"><span class="option-letter">D</span>Estoy aprendiendo a esperar el tiempo de Dios aunque ya sé lo que Él me prometió</button>
+</div><div class="feedback" id="fb11"><div class="feedback-title">Reflexión</div><div class="feedback-text">Toda respuesta honesta es válida. La oración del capítulo lo resume: 'Señor, forma en mí el corazón de David. Líbrame del espíritu de Saúl. Enséñame a obedecer cuando estoy arriba y a honrar cuando estoy abajo.'</div></div><div class="nav-buttons"><button class="btn" onclick="prev(11)">← Anterior</button><button class="btn btn-primary" id="next11" onclick="next(11)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q12"><div class="question-number">Pregunta 12</div><p class="question-text">¿Cuál es la oración de cierre del capítulo y qué peticiones combina?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q12')"><span class="option-letter">A</span>Solo pide humildad para no enorgullecerse del liderazgo</button>
+<button class="option" onclick="answer(this,false,'q12')"><span class="option-letter">B</span>Solo pide protección contra autoridades injustas</button>
+<button class="option" onclick="answer(this,false,'q12')"><span class="option-letter">C</span>Solo pide el tiempo correcto para el ascenso al liderazgo</button>
+<button class="option" onclick="answer(this,true,'q12')"><span class="option-letter">D</span>Combina tres peticiones: el corazón de David (obediencia), liberación del espíritu de Saúl (independencia), y recibir la toalla del servicio antes que la corona del liderazgo</button>
+</div><div class="feedback" id="fb12"><div class="feedback-title">Reflexión</div><div class="feedback-text">'Dame la toalla del servicio antes que la corona del liderazgo.' Esta oración resume todo el libro: la formación precede al gobierno, la obediencia precede a la autoridad, y el carácter debe sostener lo que Dios confía.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(12)">← Anterior</button><button class="btn btn-primary" onclick="showResults()">Ver resultados →</button></div></div>
+
+  <div class="results-card" id="results">
+    <div class="results-icon">✦</div>
+    <div class="results-label">Resultado Final — Capítulo 11</div>
+    <div class="results-score" id="score-display">0<span>/12</span></div>
+    <p class="results-message" id="results-message"></p>
+    <p class="results-verse">"El que honra el manto que está sobre él, recibirá un manto que otros honrarán." — Milton Valle</p>
+    <div class="results-actions">
+      <button class="btn btn-light" onclick="restart()">Intentar de nuevo</button>
+      <button class="btn btn-primary" onclick="openShare('La Autoridad debe respetar la Autoridad', score, total)" style="background:#B8965A;border-color:#B8965A;color:#1A1510;">✉ Enviar resultados</button>
+      <a href="index.html" class="btn btn-primary" style="text-decoration:none;">Ver todos los capítulos</a>
+      <a href="index.html" class="btn btn-light" style="text-decoration:none;">Ver todos</a>
+    </div>
+  </div>
+</div>
+<script>
+let current=1,score=0;const total=12,answered={};
+function answer(btn,isCorrect,qId){if(answered[qId])return;answered[qId]=true;const options=btn.parentElement.querySelectorAll('.option');options.forEach(o=>{o.disabled=true});const num=parseInt(qId.replace('q',''));if(isCorrect){btn.classList.add('correct');score++;document.getElementById('score-text').textContent=score+' correcta'+(score!==1?'s':'');}
+  // Record for share
+  const qCard=document.getElementById('q'+num);
+  const qText=qCard.querySelector('.question-text').textContent;
+  const fbText=qCard.querySelector('.feedback-text').textContent;
+  recordAnswer(num,qText,btn.querySelector('.option-letter').nextSibling?btn.textContent.trim().replace(/^[A-D]/,'').trim():btn.textContent.trim(),isCorrect,fbText);else{btn.classList.add('wrong');options.forEach(o=>{if(o.getAttribute('onclick').includes('true'))o.classList.add('correct')});}document.getElementById('fb'+num).classList.add('show');const nextBtn=document.getElementById('next'+num);if(nextBtn)nextBtn.disabled=false;if(num===total)document.querySelector('#q12 .btn-primary').disabled=false;}
+function next(n){document.getElementById('q'+n).classList.remove('active');current=n+1;document.getElementById('q'+current).classList.add('active');updateProgress();window.scrollTo({top:0,behavior:'smooth'});}
+function prev(n){document.getElementById('q'+n).classList.remove('active');current=n-1;document.getElementById('q'+current).classList.add('active');updateProgress();window.scrollTo({top:0,behavior:'smooth'});}
+function updateProgress(){document.getElementById('progress-text').textContent='Pregunta '+current+' de '+total;document.getElementById('progress-fill').style.width=((current-1)/total*100)+'%';}
+function showResults(){document.getElementById('q12').classList.remove('active');const r=document.getElementById('results');r.classList.add('show');document.getElementById('score-display').innerHTML=score+'<span>/'+total+'</span>';let msg='';if(score>=10)msg='Excelente. Este capítulo ha calado profundo en tu comprensión. Que esta verdad se convierta en obediencia activa.';else if(score>=7)msg='Buen avance. Te invitamos a releer las secciones donde dudaste y llevarlas a la oración.';else msg='Este capítulo tiene mucho más para darte. Vuelve a leerlo con calma y pídele a Dios revelación, no solo información.';document.getElementById('results-message').textContent=msg;document.getElementById('progress-fill').style.width='100%';window.scrollTo({top:0,behavior:'smooth'});}
+function restart(){location.reload();}
+updateProgress();document.querySelector('#q12 .btn-primary').disabled=true;
+
+// ── Share functionality ──────────────────────────────────────────────
+
+// Store answer data per question
+const questionData = {};
+function recordAnswer(qNum, questionText, selectedText, isCorrect, feedbackText) {
+  questionData[qNum] = { questionText, selectedText, isCorrect, feedbackText };
+}
+
+function buildSummary(chapterTitle, scoreVal, totalVal) {
+  const pct = Math.round((scoreVal / totalVal) * 100);
+  let summary = '== EN AUTORIDAD & BAJO AUTORIDAD ==\n';
+  summary += 'Milton Valle\n\n';
+  summary += `Capítulo: ${chapterTitle}\n`;
+  summary += `Nota: ${scoreVal}/${totalVal} (${pct}%)\n`;
+  summary += '─────────────────────────────\n\n';
+
+  const keys = Object.keys(questionData).map(Number).sort((a,b)=>a-b);
+  keys.forEach(n => {
+    const d = questionData[n];
+    const status = d.isCorrect ? '✓' : '✗';
+    summary += `${status} Pregunta ${n}: ${d.questionText}\n`;
+    summary += `   Mi respuesta: ${d.selectedText}\n`;
+    summary += `   Reflexión: ${d.feedbackText}\n\n`;
+  });
+
+  summary += '─────────────────────────────\n';
+  if (pct >= 83) summary += '"El que sabe obedecer en lo secreto, será establecido por Dios en lo público."';
+  else summary += '"Prefiero ser formado bajo Tu autoridad que usado sin estar rendido a Tu voluntad."';
+  summary += '\n— En Autoridad & Bajo Autoridad — Milton Valle';
+  return summary;
+}
+
+let currentSummary = '';
+let currentChapterTitle = '';
+
+function openShare(chapterTitle, scoreVal, totalVal) {
+  currentChapterTitle = chapterTitle;
+  currentSummary = buildSummary(chapterTitle, scoreVal, totalVal);
+  document.getElementById('shareModalTitle').textContent = `Capítulo: ${chapterTitle}`;
+  document.getElementById('shareOverlay').classList.add('show');
+  document.getElementById('shareForm').style.display = 'block';
+  document.getElementById('shareSuccess').classList.remove('show');
+}
+
+function closeShare() {
+  document.getElementById('shareOverlay').classList.remove('show');
+}
+
+function closeShareIfOutside(e) {
+  if (e.target === document.getElementById('shareOverlay')) closeShare();
+}
+
+function sendEmail() {
+  const email = document.getElementById('shareEmail').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('shareEmail').style.borderColor = '#7A1F1F';
+    document.getElementById('shareEmail').focus();
+    return;
+  }
+  document.getElementById('shareEmail').style.borderColor = '';
+
+  const subject = encodeURIComponent(`Mi resultado — ${currentChapterTitle} | En Autoridad & Bajo Autoridad`);
+  const body = encodeURIComponent(currentSummary);
+  const mailto = `mailto:${email}?subject=${subject}&body=${body}`;
+  window.location.href = mailto;
+
+  showSuccess('Tu cliente de correo abrirá en un momento con el resumen listo para enviar.');
+}
+
+function sendSMS() {
+  const phone = document.getElementById('sharePhone').value.trim().replace(/\s/g,'');
+  if (!phone) {
+    document.getElementById('sharePhone').style.borderColor = '#7A1F1F';
+    document.getElementById('sharePhone').focus();
+    return;
+  }
+  document.getElementById('sharePhone').style.borderColor = '';
+
+  const keys = Object.keys(questionData).map(Number).sort((a,b)=>a-b);
+  const correct2 = keys.filter(n => questionData[n].isCorrect).length;
+  const pct = Math.round((correct2/keys.length)*100);
+
+  let smsBody = `En Autoridad & Bajo Autoridad — Milton Valle\n`;
+  smsBody += `Capítulo: ${currentChapterTitle}\n`;
+  smsBody += `Nota: ${correct2}/${keys.length} (${pct}%)\n\n`;
+  keys.forEach(n => {
+    const d = questionData[n];
+    smsBody += `${d.isCorrect ? '✓' : '✗'} P${n}: ${d.selectedText}\n`;
+    smsBody += `   → ${d.feedbackText}\n\n`;
+  });
+  if (pct >= 83) smsBody += '"El que sabe obedecer en lo secreto, será establecido por Dios en lo público."';
+  else smsBody += '"Prefiero ser formado bajo Tu autoridad que usado sin estar rendido a Tu voluntad."';
+  smsBody += '\n— En Autoridad & Bajo Autoridad';
+
+  const encoded = encodeURIComponent(smsBody);
+  window.location.href = `sms:${phone}?body=${encoded}`;
+  showSuccess('Tu aplicación de mensajes se abrirá con el resumen completo y todas las reflexiones.');
+}
+
+function copyToClipboard() {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(currentSummary).then(() => {
+      showSuccess('Resultados copiados al portapapeles. Puedes pegarlo donde quieras.');
+    }).catch(() => fallbackCopy());
+  } else {
+    fallbackCopy();
+  }
+}
+
+function fallbackCopy() {
+  const ta = document.createElement('textarea');
+  ta.value = currentSummary;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try {
+    document.execCommand('copy');
+    showSuccess('Resultados copiados al portapapeles. Puedes pegarlo donde quieras.');
+  } catch(e) {
+    showSuccess('No se pudo copiar automáticamente. Selecciona el texto manualmente.');
+  }
+  document.body.removeChild(ta);
+}
+
+function showSuccess(msg) {
+  document.getElementById('shareForm').style.display = 'none';
+  const s = document.getElementById('shareSuccess');
+  document.getElementById('shareSuccessText').textContent = msg;
+  s.classList.add('show');
+  setTimeout(() => closeShare(), 3500);
+}
+
+</script>
+
+<!-- Share Modal -->
+<div class="share-overlay" id="shareOverlay" onclick="closeShareIfOutside(event)">
+  <div class="share-modal" id="shareModal">
+    <button class="share-close" onclick="closeShare()">✕</button>
+    <div id="shareForm">
+      <div class="share-title">Compartir resultados</div>
+      <div class="share-subtitle" id="shareModalTitle">Envía tu nota y reflexiones</div>
+
+      <label class="share-field-label" for="shareEmail">Correo electrónico</label>
+      <input class="share-input" type="email" id="shareEmail" placeholder="tu@correo.com">
+
+      <button class="share-btn share-btn-email" onclick="sendEmail()">
+        ✉ Enviar por correo
+      </button>
+
+      <div class="share-divider">
+        <div class="share-divider-line"></div>
+        <div class="share-divider-text">o por</div>
+        <div class="share-divider-line"></div>
+      </div>
+
+      <label class="share-field-label" for="sharePhone">Número de teléfono</label>
+      <input class="share-input" type="tel" id="sharePhone" placeholder="+1 (555) 000-0000">
+
+      <button class="share-btn share-btn-sms" onclick="sendSMS()">
+        💬 Enviar por mensaje de texto
+      </button>
+
+      <div class="share-divider" style="margin-top:16px">
+        <div class="share-divider-line"></div>
+        <div class="share-divider-text">o simplemente</div>
+        <div class="share-divider-line"></div>
+      </div>
+
+      <button class="share-btn share-btn-copy" onclick="copyToClipboard()">
+        ⎘ Copiar resultados al portapapeles
+      </button>
+
+      <p class="share-note">El resumen incluye tu nota, las preguntas y las reflexiones del capítulo.</p>
+    </div>
+    <div class="share-success" id="shareSuccess">
+      <div class="share-success-icon">✦</div>
+      <p class="share-success-text" id="shareSuccessText"></p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Epílogo — Autoridad y Orden Espiritual</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root{--cream:#F5F0E8;--dark:#1A1510;--gold:#B8965A;--gold-light:#D4B483;--gold-pale:#EDD99A;--burgundy:#5C2E2E;--text:#2C2416;--muted:#7A6E5F;--correct:#2D5A27;--wrong:#7A1F1F;--card-bg:#FFFDF8}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background-color:var(--cream);color:var(--text);font-family:'Lato',sans-serif;font-weight:300;min-height:100vh;background-image:radial-gradient(ellipse at 10% 20%,rgba(184,150,90,.06) 0%,transparent 60%),radial-gradient(ellipse at 90% 80%,rgba(92,46,46,.05) 0%,transparent 60%)}
+  .top-bar{background:var(--dark);padding:12px 40px;display:flex;align-items:center;justify-content:space-between}
+  .series{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
+  .nav-link{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;color:var(--gold-light);text-decoration:none;opacity:.8;transition:opacity .2s}
+  .nav-link:hover{opacity:1}
+  .hero{text-align:center;padding:60px 40px 40px}
+  .chapter-label{font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:16px;display:block}
+  .chapter-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,5vw,52px);font-weight:300;color:var(--dark);line-height:1.2;margin-bottom:12px}
+  .chapter-title em{font-style:italic;color:var(--burgundy)}
+  .divider{display:flex;align-items:center;justify-content:center;gap:16px;margin:24px auto;max-width:300px}
+  .divider-line{flex:1;height:1px;background:var(--gold-light);opacity:.5}
+  .divider-diamond{width:6px;height:6px;background:var(--gold);transform:rotate(45deg)}
+  .subtitle{font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:var(--muted);max-width:520px;margin:0 auto 8px;line-height:1.7}
+  .progress-container{max-width:680px;margin:0 auto 40px;padding:0 40px}
+  .progress-info{display:flex;justify-content:space-between;font-size:12px;letter-spacing:1px;color:var(--muted);margin-bottom:8px;font-family:'Cinzel',serif}
+  .progress-bar{height:3px;background:rgba(184,150,90,.2);border-radius:2px;overflow:hidden}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-pale));border-radius:2px;transition:width .5s ease;width:0%}
+  .quiz-container{max-width:680px;margin:0 auto;padding:0 24px 80px}
+  .question-card{background:var(--card-bg);border:1px solid rgba(184,150,90,.2);border-radius:2px;padding:36px 40px;margin-bottom:24px;display:none;animation:fadeSlide .4s ease forwards;box-shadow:0 4px 24px rgba(26,21,16,.06);position:relative}
+  .question-card.active{display:block}
+  .question-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,var(--gold),transparent);border-radius:2px 0 0 2px}
+  @keyframes fadeSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .question-number{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:14px}
+  .question-text{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:400;line-height:1.55;color:var(--dark);margin-bottom:28px}
+  .options{display:flex;flex-direction:column;gap:10px}
+  .option{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;border:1px solid rgba(184,150,90,.25);border-radius:2px;cursor:pointer;transition:all .2s ease;background:transparent;text-align:left;width:100%;font-family:'Lato',sans-serif;font-size:14px;font-weight:300;color:var(--text);line-height:1.5}
+  .option:hover:not(:disabled){border-color:var(--gold);background:rgba(184,150,90,.05)}
+  .option-letter{font-family:'Cinzel',serif;font-size:11px;color:var(--gold);min-width:18px;margin-top:1px}
+  .option.correct{border-color:var(--correct);background:rgba(45,90,39,.06);color:var(--correct)}
+  .option.wrong{border-color:var(--wrong);background:rgba(122,31,31,.06);color:var(--wrong)}
+  .option:disabled{cursor:default}
+  .feedback{display:none;margin-top:20px;padding:16px 20px;border-left:3px solid var(--gold);background:rgba(184,150,90,.06);border-radius:0 2px 2px 0}
+  .feedback.show{display:block;animation:fadeSlide .3s ease forwards}
+  .feedback-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;color:var(--gold);margin-bottom:6px}
+  .feedback-text{font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:var(--muted);line-height:1.65}
+  .nav-buttons{display:flex;justify-content:space-between;align-items:center;margin-top:28px}
+  .btn{font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:12px 28px;border:1px solid var(--gold);background:transparent;color:var(--gold);cursor:pointer;transition:all .2s ease;border-radius:1px}
+  .btn:hover{background:var(--gold);color:var(--dark)}
+  .btn:disabled{opacity:.3;cursor:default}
+  .btn-primary{background:var(--dark);color:var(--gold-light);border-color:var(--dark)}
+  .btn-primary:hover{background:var(--gold);color:var(--dark);border-color:var(--gold)}
+  .results-card{display:none;background:var(--dark);border-radius:2px;padding:56px 40px;text-align:center;animation:fadeSlide .5s ease forwards}
+  .results-card.show{display:block}
+  .results-icon{font-size:48px;margin-bottom:20px}
+  .results-label{font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--gold);margin-bottom:12px}
+  .results-score{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:300;color:var(--cream);line-height:1;margin-bottom:8px}
+  .results-score span{font-size:32px;color:var(--gold-light)}
+  .results-message{font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:var(--gold-light);margin:20px auto;max-width:420px;line-height:1.6}
+  .results-verse{font-family:'Cormorant Garamond',serif;font-size:15px;color:rgba(245,240,232,.5);font-style:italic;margin-top:28px}
+  .results-actions{display:flex;gap:16px;justify-content:center;margin-top:36px;flex-wrap:wrap}
+  .btn-light{border-color:var(--gold-light);color:var(--gold-light)}
+  .btn-light:hover{background:var(--gold-light);color:var(--dark)}
+  /* Share modal */
+  .share-overlay{display:none;position:fixed;inset:0;background:rgba(26,21,16,.92);z-index:100;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px)}
+  .share-overlay.show{display:flex}
+  .share-modal{background:#FFFDF8;border-radius:2px;padding:40px;max-width:440px;width:100%;position:relative;animation:fadeSlide .3s ease forwards;box-shadow:0 24px 80px rgba(26,21,16,.5)}
+  .share-close{position:absolute;top:16px;right:20px;background:none;border:none;font-size:20px;cursor:pointer;color:#7A6E5F;line-height:1}
+  .share-title{font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;color:#B8965A;text-transform:uppercase;margin-bottom:8px}
+  .share-subtitle{font-family:'Cormorant Garamond',serif;font-size:20px;color:#1A1510;margin-bottom:24px;line-height:1.3}
+  .share-field-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:#7A6E5F;text-transform:uppercase;margin-bottom:6px;display:block}
+  .share-input{width:100%;padding:12px 14px;border:1px solid rgba(184,150,90,.35);border-radius:2px;font-family:'Lato',sans-serif;font-size:14px;font-weight:300;color:#2C2416;background:transparent;margin-bottom:16px;outline:none;transition:border-color .2s}
+  .share-input:focus{border-color:#B8965A}
+  .share-divider{display:flex;align-items:center;gap:12px;margin:4px 0 16px}
+  .share-divider-line{flex:1;height:1px;background:rgba(184,150,90,.2)}
+  .share-divider-text{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:#B8965A;opacity:.6}
+  .share-buttons{display:flex;flex-direction:column;gap:10px}
+  .share-btn{width:100%;padding:13px 20px;border-radius:2px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;border:none}
+  .share-btn-email{background:#1A1510;color:#D4B483}
+  .share-btn-email:hover{background:#B8965A;color:#1A1510}
+  .share-btn-sms{background:transparent;border:1px solid rgba(184,150,90,.4);color:#B8965A}
+  .share-btn-sms:hover{background:rgba(184,150,90,.08);border-color:#B8965A}
+  .share-btn-copy{background:transparent;border:1px solid rgba(184,150,90,.2);color:#7A6E5F;font-size:9px}
+  .share-btn-copy:hover{border-color:rgba(184,150,90,.5);color:#B8965A}
+  .share-note{font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:#7A6E5F;margin-top:16px;text-align:center;line-height:1.5}
+  .share-success{display:none;text-align:center;padding:16px}
+  .share-success.show{display:block}
+  .share-success-icon{font-size:32px;margin-bottom:8px}
+  .share-success-text{font-family:'Cormorant Garamond',serif;font-size:18px;font-style:italic;color:#2D5A27}
+  @media(max-width:600px){.hero{padding:40px 24px 24px}.question-card{padding:28px 24px}.top-bar{padding:12px 24px}.progress-container{padding:0 24px}}
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <span class="series">En Autoridad &amp; Bajo Autoridad — Milton Valle</span>
+  <a href="index.html" class="nav-link">← Todos los capítulos</a>
+</div>
+<div class="hero">
+  <span class="chapter-label">Epílogo</span>
+  <h1 class="chapter-title">Autoridad y Orden <em>Espiritual</em></h1>
+  <div class="divider"><div class="divider-line"></div><div class="divider-diamond"></div><div class="divider-line"></div></div>
+  <p class="subtitle">El Concilio de Jerusalén en Hechos 15 es el modelo bíblico definitivo de cómo funciona el orden en el Reino: consenso, Escritura, liderazgo reconocido y resolución que busca unidad.</p>
+</div>
+<div class="progress-container">
+  <div class="progress-info"><span id="progress-text">Pregunta 1 de 12</span><span id="score-text">0 correctas</span></div>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+<div class="quiz-container">
+<div class="question-card active" id="q1"><div class="question-number">Pregunta 01</div><p class="question-text">¿Cuál fue la primera gran crisis doctrinal que enfrentó la iglesia primitiva, descrita en el Epílogo?</p><div class="options">
+<button class="option" onclick="answer(this,true,'q1')"><span class="option-letter">A</span>Si los gentiles debían circuncidarse y guardar la ley de Moisés para ser salvos</button>
+<button class="option" onclick="answer(this,false,'q1')"><span class="option-letter">B</span>Si los creyentes podían comer carne sacrificada a ídolos</button>
+<button class="option" onclick="answer(this,false,'q1')"><span class="option-letter">C</span>Si los apóstoles debían permanecer en Jerusalén o salir a misionar</button>
+<button class="option" onclick="answer(this,false,'q1')"><span class="option-letter">D</span>Si las mujeres podían enseñar en las congregaciones</button>
+</div><div class="feedback" id="fb1"><div class="feedback-title">Reflexión</div><div class="feedback-text">La iglesia enfrentaba su primera gran crisis doctrinal. La respuesta no vino de una opinión aislada ni de una revelación individual independiente, sino de una reunión bajo autoridad, con diálogo, testimonio, Escritura y consenso espiritual.</div></div><div class="nav-buttons"><button class="btn" disabled>← Anterior</button><button class="btn btn-primary" id="next1" onclick="next(1)" disabled>Siguiente →</button></div></div>
+<div class="question-card" id="q2"><div class="question-number">Pregunta 02</div><p class="question-text">Según el principio 1 del Epílogo, ¿cómo deben resolverse las crisis en la iglesia?</p><div class="options">
+<button class="option" onclick="answer(this,true,'q2')"><span class="option-letter">A</span>En consenso: convocando autoridad espiritual, exponiendo la situación, buscando acuerdo, perdonando y sanando para que la obra avance</button>
+<button class="option" onclick="answer(this,false,'q2')"><span class="option-letter">B</span>Huyendo, callando o buscando otra congregación más pacífica</button>
+<button class="option" onclick="answer(this,false,'q2')"><span class="option-letter">C</span>Dejando que el tiempo resuelva el conflicto naturalmente</button>
+<button class="option" onclick="answer(this,false,'q2')"><span class="option-letter">D</span>Tomando una decisión rápida para evitar que el problema se expanda</button>
+</div><div class="feedback" id="fb2"><div class="feedback-title">Reflexión</div><div class="feedback-text">Hechos 15:6: 'Se reunieron los apóstoles y los ancianos para conocer de este asunto.' No se huye, no se renuncia, no se aisla; se busca consenso donde se convoca autoridad espiritual, se expone la situación, se busca acuerdo, se perdona y se sana.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(2)">← Anterior</button><button class="btn btn-primary" id="next2" onclick="next(2)" disabled>Siguiente →</button></div></div>
+<div class="question-card" id="q3"><div class="question-number">Pregunta 03</div><p class="question-text">¿Qué papel jugó Pedro en el Concilio de Jerusalén y cómo modeló la autoridad sana?</p><div class="options"><button class="option" onclick="answer(this,false,'q3')"><span class="option-letter">A</span>Impuso su decisión como apóstol principal sin escuchar a los demás</button>
+<button class="option" onclick="answer(this,true,'q3')"><span class="option-letter">B</span>Esperó a que todos hablaran antes de hablar; recordó cómo Dios salvó a los gentiles por gracia y confrontó en amor la carga que se les quería imponer</button>
+<button class="option" onclick="answer(this,false,'q3')"><span class="option-letter">C</span>Se mantuvo callado para no generar más conflicto</button>
+<button class="option" onclick="answer(this,false,'q3')"><span class="option-letter">D</span>Apoyó la posición de los judaizantes para mantener la paz</button>
+</div><div class="feedback" id="fb3"><div class="feedback-title">Reflexión</div><div class="feedback-text">Después de mucha discusión, Pedro se levantó y recordó cómo Dios visitó a los gentiles. Incluso los confrontó en amor: '¿Por qué tentáis a Dios, poniendo sobre la cerviz de los discípulos un yugo que ni nuestros padres ni nosotros hemos podido llevar?'</div></div><div class="nav-buttons"><button class="btn" onclick="prev(3)">← Anterior</button><button class="btn btn-primary" id="next3" onclick="next(3)" disabled>Siguiente →</button></div></div>
+<div class="question-card" id="q4"><div class="question-number">Pregunta 04</div><p class="question-text">¿Por qué el hecho de que 'toda la multitud calló' cuando Pablo y Bernabé hablaron (Hechos 15:12) es significativo para el modelo de autoridad del Epílogo?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q4')"><span class="option-letter">A</span>Porque Pablo era el apóstol de mayor autoridad y todos debían obedecerle</button>
+<button class="option" onclick="answer(this,false,'q4')"><span class="option-letter">B</span>Porque Pablo amenazó con irse si no lo escuchaban</button>
+<button class="option" onclick="answer(this,false,'q4')"><span class="option-letter">C</span>Porque la multitud reconoció su error doctrinal al escuchar a Pablo</button>
+<button class="option" onclick="answer(this,true,'q4')"><span class="option-letter">D</span>Porque la autoridad sana permite que todos aporten y sean escuchados; nadie monopolizó el proceso y las evidencias de Dios hablaron por sí solas</button>
+</div><div class="feedback" id="fb4"><div class="feedback-title">Reflexión</div><div class="feedback-text">Todos aportaron. Nadie monopolizó. La autoridad permite participación, no imposición. El modelo del Concilio muestra que la decisión sana incluye escuchar testimonios, evidencias, y la Escritura antes de concluir.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(4)">← Anterior</button><button class="btn btn-primary" id="next4" onclick="next(4)" disabled>Siguiente →</button></div></div>
+<div class="question-card" id="q5"><div class="question-number">Pregunta 05</div><p class="question-text">¿Quién tomó la decisión final en el Concilio de Jerusalén y sobre qué bases la fundamentó?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q5')"><span class="option-letter">A</span>Pablo, porque era el más experimentado misionero entre gentiles</button>
+<button class="option" onclick="answer(this,false,'q5')"><span class="option-letter">B</span>Pedro, como primer apóstol designado por Jesús</button>
+<button class="option" onclick="answer(this,false,'q5')"><span class="option-letter">C</span>La decisión fue tomada por votación de todos los presentes por igual</button>
+<button class="option" onclick="answer(this,true,'q5')"><span class="option-letter">D</span>Jacobo (Santiago), líder y obispo de la iglesia en Jerusalén, quien escuchó, citó la Escritura de Amós 9, discernió el momento y dio la resolución pastoral</button>
+</div><div class="feedback" id="fb5"><div class="feedback-title">Reflexión</div><div class="feedback-text">El orden no elimina el diálogo, pero sí establece quién concluye. Son los pastores generales quienes toman la última decisión y los demás se someten. Jacobo no habló desde preferencia personal; fundamentó la decisión en la Escritura.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(5)">← Anterior</button><button class="btn btn-primary" id="next5" onclick="next(5)" disabled>Siguiente →</button></div></div>
+<div class="question-card" id="q6"><div class="question-number">Pregunta 06</div><p class="question-text">La resolución del Concilio comenzó con las palabras: 'Ha parecido bien al Espíritu Santo, y a nosotros.' ¿Qué principio de autoridad revela esta frase?</p><div class="options">
+<button class="option" onclick="answer(this,true,'q6')"><span class="option-letter">A</span>Que la verdadera resolución bajo autoridad combina la dirección del Espíritu con el consenso humano alineado; no fue imposición de uno, sino acuerdo bajo dirección divina</button>
+<button class="option" onclick="answer(this,false,'q6')"><span class="option-letter">B</span>Que toda decisión de la iglesia tiene automáticamente respaldo del Espíritu Santo</button>
+<button class="option" onclick="answer(this,false,'q6')"><span class="option-letter">C</span>Que el Espíritu Santo siempre confirma las decisiones de las autoridades</button>
+<button class="option" onclick="answer(this,false,'q6')"><span class="option-letter">D</span>Que la autoridad humana puede hablar en nombre del Espíritu Santo sin limitaciones</button>
+</div><div class="feedback" id="fb6"><div class="feedback-title">Reflexión</div><div class="feedback-text">No fue: 'Santiago decidió solo', o 'Pedro ganó', o 'Pablo impuso'. Fue un consenso bajo dirección divina. Todos opinaron, Santiago tomó la decisión final, y todos en unidad lo aceptaron. Esta es la autoridad sana.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(6)">← Anterior</button><button class="btn btn-primary" id="next6" onclick="next(6)" disabled>Siguiente →</button></div></div>
+<div class="question-card" id="q7"><div class="question-number">Pregunta 07</div><p class="question-text">¿Cuál fue el resultado concreto del Concilio de Jerusalén para la iglesia, según el Epílogo?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q7')"><span class="option-letter">A</span>Creó una jerarquía clara que separó definitivamente a judíos y gentiles en la iglesia</button>
+<button class="option" onclick="answer(this,false,'q7')"><span class="option-letter">B</span>Eliminó el conflicto doctrinal de manera permanente en toda la iglesia primitiva</button>
+<button class="option" onclick="answer(this,false,'q7')"><span class="option-letter">C</span>Dio a Pablo autoridad absoluta sobre todas las iglesias gentiles</button>
+<button class="option" onclick="answer(this,true,'q7')"><span class="option-letter">D</span>La iglesia se fortaleció, la doctrina se preservó, los gentiles no fueron oprimidos, la santidad se mantuvo sin legalismo, y el orden produjo unidad y crecimiento</button>
+</div><div class="feedback" id="fb7"><div class="feedback-title">Reflexión</div><div class="feedback-text">El Concilio enseña que donde hay consenso, hay respaldo; donde hay respaldo, hay paz; y donde hay paz, hay expansión. La unidad bajo autoridad sana no restringe el crecimiento; lo produce.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(7)">← Anterior</button><button class="btn btn-primary" id="next7" onclick="next(7)" disabled>Siguiente →</button></div></div>
+<div class="question-card" id="q8"><div class="question-number">Pregunta 08</div><p class="question-text">¿Por qué el Epílogo dice que 'la autoridad espiritual legítima siempre se somete a la Palabra'?</p><div class="options"><button class="option" onclick="answer(this,false,'q8')"><span class="option-letter">A</span>Porque la Biblia contiene instrucciones para todos los problemas posibles de la iglesia</button>
+<button class="option" onclick="answer(this,true,'q8')"><span class="option-letter">B</span>Porque cuando la autoridad contradice la Escritura, deja de ser autoridad bíblica; la Palabra es el límite y la fuente de toda decisión pastoral legítima</button>
+<button class="option" onclick="answer(this,false,'q8')"><span class="option-letter">C</span>Porque los líderes deben citar versículos en cada decisión que toman</button>
+<button class="option" onclick="answer(this,false,'q8')"><span class="option-letter">D</span>Porque la Palabra de Dios es más importante que la experiencia del líder</button>
+</div><div class="feedback" id="fb8"><div class="feedback-title">Reflexión</div><div class="feedback-text">Jacobo no habló desde preferencia personal; fundamentó su decisión en la Escritura citando a Amós 9. La autoridad espiritual legítima siempre se somete a la Palabra. Donde la autoridad contradice la Escritura, deja de ser autoridad bíblica.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(8)">← Anterior</button><button class="btn btn-primary" id="next8" onclick="next(8)" disabled>Siguiente →</button></div></div>
+<div class="question-card" id="q9"><div class="question-number">Pregunta 09</div><p class="question-text">Según el Epílogo, ¿cuál es la fórmula que produce expansión en la iglesia de Cristo?</p><div class="options"><button class="option" onclick="answer(this,false,'q9')"><span class="option-letter">A</span>Liderazgo fuerte + predicación poderosa + recursos económicos</button>
+<button class="option" onclick="answer(this,true,'q9')"><span class="option-letter">B</span>Consenso bajo dirección divina + respaldo → paz → expansión</button>
+<button class="option" onclick="answer(this,false,'q9')"><span class="option-letter">C</span>Autoridad centralizada + obediencia ciega + disciplina estricta</button>
+<button class="option" onclick="answer(this,false,'q9')"><span class="option-letter">D</span>Libertad individual + diálogo sin estructura + tolerancia doctrinal</button>
+</div><div class="feedback" id="fb9"><div class="feedback-title">Reflexión</div><div class="feedback-text">El Concilio de Jerusalén nos enseña que en la iglesia de Cristo donde hay consenso, hay respaldo; donde hay respaldo, hay paz; y donde hay paz, hay expansión. Esta es la cadena que produce crecimiento genuino.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(9)">← Anterior</button><button class="btn btn-primary" id="next9" onclick="next(9)" disabled>Siguiente →</button></div></div>
+<div class="question-card" id="q10"><div class="question-number">Pregunta 10</div><p class="question-text">El Epílogo cierra con instrucciones para quienes están bajo autoridad. ¿Cuál NO es una de ellas?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q10')"><span class="option-letter">A</span>No huyas cuando enfrentes conflictos en la iglesia</button>
+<button class="option" onclick="answer(this,false,'q10')"><span class="option-letter">B</span>No resuelvas conflictos espirituales en aislamiento</button>
+<button class="option" onclick="answer(this,true,'q10')"><span class="option-letter">C</span>Busca siempre una segunda opinión externa antes de someterte</button>
+<button class="option" onclick="answer(this,false,'q10')"><span class="option-letter">D</span>Lleva dudas y tensiones al consenso con tus pastores</button>
+</div><div class="feedback" id="fb10"><div class="feedback-title">Reflexión</div><div class="feedback-text">Las instrucciones para quienes están bajo autoridad son: no huir, no resolver en aislamiento, llevar las tensiones al consenso con pastores y líderes delegados, y aprender a esperar resolución en orden. No se menciona buscar opinión externa como alternativa.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(10)">← Anterior</button><button class="btn btn-primary" id="next10" onclick="next(10)" disabled>Siguiente →</button></div></div>
+<div class="question-card" id="q11"><div class="question-number">Pregunta 11</div><p class="question-text">El Epílogo cierra con instrucciones para quienes ejercen autoridad. ¿Cuál es la primera y más fundamental?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q11')"><span class="option-letter">A</span>Decidir rápido para evitar que el conflicto se expanda</button>
+<button class="option" onclick="answer(this,false,'q11')"><span class="option-letter">B</span>Consultar siempre con las autoridades civiles antes de actuar</button>
+<button class="option" onclick="answer(this,true,'q11')"><span class="option-letter">C</span>Escuchar todas las partes antes de decidir</button>
+<button class="option" onclick="answer(this,false,'q11')"><span class="option-letter">D</span>Evitar el debate abierto para mantener el orden en la congregación</button>
+</div><div class="feedback" id="fb11"><div class="feedback-title">Reflexión</div><div class="feedback-text">El modelo del Concilio establece: escucha todas las partes antes de decidir, fundamenta toda decisión en la Palabra, decide buscando unidad y no protagonismo, y recuerda que tu autoridad es delegada de parte de Dios.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(11)">← Anterior</button><button class="btn btn-primary" id="next11" onclick="next(11)" disabled>Siguiente →</button></div></div>
+<div class="question-card" id="q12"><div class="question-number">Pregunta 12</div><p class="question-text">Aplicando el Epílogo a tu vida: ¿En cuál de estas situaciones reconoces que necesitas aplicar el modelo del Concilio de Jerusalén?</p><div class="options">
+<button class="option" onclick="answer(this,true,'q12')"><span class="option-letter">A</span>Cuando tengo un desacuerdo doctrinal y lo comparto solo con personas que piensan igual que yo</button>
+<button class="option" onclick="answer(this,true,'q12')"><span class="option-letter">B</span>Cuando soy autoridad y tomo decisiones sin escuchar todas las partes involucradas</button>
+<button class="option" onclick="answer(this,true,'q12')"><span class="option-letter">C</span>Cuando hay un conflicto en mi iglesia que me afecta y mi primera reacción es irme o callar</button>
+<button class="option" onclick="answer(this,true,'q12')"><span class="option-letter">D</span>En todas las anteriores; el modelo del Concilio aplica a múltiples situaciones de mi vida</button>
+</div><div class="feedback" id="fb12"><div class="feedback-title">Reflexión</div><div class="feedback-text">Toda respuesta honesta es válida. El Epílogo nos invita a aplicar: no huir de los conflictos, no resolverlos en aislamiento, llevarlos al consenso con autoridad espiritual, y tanto si estamos bajo autoridad como si la ejercemos, operar con escucha, Escritura y búsqueda de unidad.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(12)">← Anterior</button><button class="btn btn-primary" onclick="showResults()">Ver resultados →</button></div></div>
+
+  <div class="results-card" id="results">
+    <div class="results-icon">✦</div>
+    <div class="results-label">Resultado Final — Epílogo</div>
+    <div class="results-score" id="score-display">0<span>/12</span></div>
+    <p class="results-message" id="results-message"></p>
+    <p class="results-verse">"La autoridad pertenece a Dios; nosotros solo la administramos." — R.C. Sproul</p>
+    <div class="results-actions">
+      <button class="btn btn-light" onclick="restart()">Intentar de nuevo</button>
+      <button class="btn btn-primary" onclick="openShare('Autoridad y Orden Espiritual', score, total)" style="background:#B8965A;border-color:#B8965A;color:#1A1510;">✉ Enviar resultados</button>
+      <a href="index.html" class="btn btn-primary" style="text-decoration:none;">Ver todos los capítulos</a>
+      <a href="index.html" class="btn btn-light" style="text-decoration:none;">Ver todos</a>
+    </div>
+  </div>
+</div>
+
+<div class="share-overlay" id="shareOverlay" onclick="closeShareIfOutside(event)">
+  <div class="share-modal" id="shareModal">
+    <button class="share-close" onclick="closeShare()">✕</button>
+    <div id="shareForm">
+      <div class="share-title">Compartir resultados</div>
+      <div class="share-subtitle" id="shareModalTitle">Envía tu nota y reflexiones</div>
+      <label class="share-field-label" for="shareEmail">Correo electrónico</label>
+      <input class="share-input" type="email" id="shareEmail" placeholder="tu@correo.com">
+      <button class="share-btn share-btn-email" onclick="sendEmail()">✉ Enviar por correo</button>
+      <div class="share-divider"><div class="share-divider-line"></div><div class="share-divider-text">o por</div><div class="share-divider-line"></div></div>
+      <label class="share-field-label" for="sharePhone">Número de teléfono</label>
+      <input class="share-input" type="tel" id="sharePhone" placeholder="+1 (555) 000-0000">
+      <button class="share-btn share-btn-sms" onclick="sendSMS()">💬 Enviar por mensaje de texto</button>
+      <div class="share-divider" style="margin-top:16px"><div class="share-divider-line"></div><div class="share-divider-text">o simplemente</div><div class="share-divider-line"></div></div>
+      <button class="share-btn share-btn-copy" onclick="copyToClipboard()">⎘ Copiar al portapapeles</button>
+      <p class="share-note">El resumen incluye tu nota, las preguntas y todas las reflexiones.</p>
+    </div>
+    <div class="share-success" id="shareSuccess">
+      <div class="share-success-icon">✦</div>
+      <p class="share-success-text" id="shareSuccessText"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+let current=1,score=0;const total=12,answered={};
+function answer(btn,isCorrect,qId){
+  if(answered[qId])return;answered[qId]=true;
+  const options=btn.parentElement.querySelectorAll('.option');
+  options.forEach(o=>{o.disabled=true});
+  const num=parseInt(qId.replace('q',''));
+  if(isCorrect){btn.classList.add('correct');score++;document.getElementById('score-text').textContent=score+' correcta'+(score!==1?'s':'');}
+  else{btn.classList.add('wrong');options.forEach(o=>{if(o.getAttribute('onclick').includes('true'))o.classList.add('correct')});}
+  const qCard=document.getElementById('q'+num);
+  const qText=qCard.querySelector('.question-text').textContent;
+  const fbText=qCard.querySelector('.feedback-text').textContent;
+  recordAnswer(num,qText,btn.textContent.trim().replace(/^[A-D]/,'').trim(),isCorrect,fbText);
+  document.getElementById('fb'+num).classList.add('show');
+  const nextBtn=document.getElementById('next'+num);if(nextBtn)nextBtn.disabled=false;
+  if(num===total)document.querySelector('#q12 .btn-primary').disabled=false;
+}
+function next(n){document.getElementById('q'+n).classList.remove('active');current=n+1;document.getElementById('q'+current).classList.add('active');updateProgress();window.scrollTo({top:0,behavior:'smooth'});}
+function prev(n){document.getElementById('q'+n).classList.remove('active');current=n-1;document.getElementById('q'+current).classList.add('active');updateProgress();window.scrollTo({top:0,behavior:'smooth'});}
+function updateProgress(){document.getElementById('progress-text').textContent='Pregunta '+current+' de '+total;document.getElementById('progress-fill').style.width=((current-1)/total*100)+'%';}
+function showResults(){
+  document.getElementById('q12').classList.remove('active');
+  const r=document.getElementById('results');r.classList.add('show');
+  document.getElementById('score-display').innerHTML=score+'<span>/'+total+'</span>';
+  const pct=Math.round((score/total)*100);
+  let msg='';
+  if(pct>=83)msg='Excelente. Este mensaje ha calado profundo en tu comprensión. Que esta verdad se convierta en obediencia activa.';
+  else if(pct>=58)msg='Buen avance. Te invitamos a releer las secciones donde dudaste y llevarlas a la oración.';
+  else msg='Esta sección tiene mucho más para darte. Vuelve a leerla con calma y pídele a Dios revelación, no solo información.';
+  document.getElementById('results-message').textContent=msg;
+  document.getElementById('progress-fill').style.width='100%';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function restart(){location.reload();}
+updateProgress();
+document.querySelector('#q12 .btn-primary').disabled=true;
+
+const questionData={};
+function recordAnswer(n,qText,selText,isCorrect,fbText){questionData[n]={questionText:qText,selectedText:selText,isCorrect,feedbackText:fbText};}
+function buildSummary(chapterTitle,scoreVal,totalVal){
+  const pct=Math.round((scoreVal/totalVal)*100);
+  let s='== EN AUTORIDAD & BAJO AUTORIDAD ==\nMilton Valle\n\n';
+  s+=`Sección: ${chapterTitle}\nNota: ${scoreVal}/${totalVal} (${pct}%)\n─────────────────────────────\n\n`;
+  Object.keys(questionData).map(Number).sort((a,b)=>a-b).forEach(n=>{
+    const d=questionData[n];
+    s+=`${d.isCorrect?'✓':'✗'} Pregunta ${n}: ${d.questionText}\n   Mi respuesta: ${d.selectedText}\n   Reflexión: ${d.feedbackText}\n\n`;
+  });
+  s+='─────────────────────────────\n';
+  s+=pct>=83?'"El que sabe obedecer en lo secreto, será establecido por Dios en lo público."':'"Prefiero ser formado bajo Tu autoridad que usado sin estar rendido a Tu voluntad."';
+  s+='\n— En Autoridad & Bajo Autoridad — Milton Valle';
+  return s;
+}
+let currentSummary='',currentChapterTitle='';
+function openShare(title,scoreVal,totalVal){
+  currentChapterTitle=title;currentSummary=buildSummary(title,scoreVal,totalVal);
+  document.getElementById('shareModalTitle').textContent=`Sección: ${title}`;
+  document.getElementById('shareOverlay').classList.add('show');
+  document.getElementById('shareForm').style.display='block';
+  document.getElementById('shareSuccess').classList.remove('show');
+}
+function closeShare(){document.getElementById('shareOverlay').classList.remove('show');}
+function closeShareIfOutside(e){if(e.target===document.getElementById('shareOverlay'))closeShare();}
+function sendEmail(){
+  const email=document.getElementById('shareEmail').value.trim();
+  if(!email||!email.includes('@')){document.getElementById('shareEmail').style.borderColor='#7A1F1F';document.getElementById('shareEmail').focus();return;}
+  document.getElementById('shareEmail').style.borderColor='';
+  window.location.href=`mailto:${email}?subject=${encodeURIComponent('Mi resultado — '+currentChapterTitle+' | En Autoridad & Bajo Autoridad')}&body=${encodeURIComponent(currentSummary)}`;
+  showSuccess('Tu cliente de correo abrirá en un momento con el resumen listo para enviar.');
+}
+function sendSMS(){
+  const phone=document.getElementById('sharePhone').value.trim().replace(/\s/g,'');
+  if(!phone){document.getElementById('sharePhone').style.borderColor='#7A1F1F';document.getElementById('sharePhone').focus();return;}
+  document.getElementById('sharePhone').style.borderColor='';
+  const keys=Object.keys(questionData).map(Number).sort((a,b)=>a-b);
+  const c2=keys.filter(n=>questionData[n].isCorrect).length;
+  const pct=Math.round((c2/keys.length)*100);
+  let sms=`En Autoridad & Bajo Autoridad\nSección: ${currentChapterTitle}\nNota: ${c2}/${keys.length} (${pct}%)\n\n`;
+  keys.forEach(n=>{const d=questionData[n];sms+=`${d.isCorrect?'✓':'✗'} P${n}: ${d.selectedText}\n   → ${d.feedbackText}\n\n`;});
+  sms+=pct>=83?'"El que sabe obedecer en lo secreto..."':'"Prefiero ser formado bajo Tu autoridad."';
+  window.location.href=`sms:${phone}?body=${encodeURIComponent(sms)}`;
+  showSuccess('Tu aplicación de mensajes se abrirá con el resumen completo y todas las reflexiones.');
+}
+function copyToClipboard(){
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(currentSummary).then(()=>showSuccess('Resultados copiados al portapapeles.')).catch(()=>fallbackCopy());}
+  else fallbackCopy();
+}
+function fallbackCopy(){const ta=document.createElement('textarea');ta.value=currentSummary;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');showSuccess('Resultados copiados al portapapeles.');}catch(e){showSuccess('No se pudo copiar automáticamente.');}document.body.removeChild(ta);}
+function showSuccess(msg){document.getElementById('shareForm').style.display='none';document.getElementById('shareSuccessText').textContent=msg;document.getElementById('shareSuccess').classList.add('show');setTimeout(()=>closeShare(),3500);}
+
+</script>
+</body>
+</html>

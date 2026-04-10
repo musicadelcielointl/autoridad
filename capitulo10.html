@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capítulo 10 — El que está en Autoridad representa a Dios</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root{--cream:#F5F0E8;--dark:#1A1510;--gold:#B8965A;--gold-light:#D4B483;--gold-pale:#EDD99A;--burgundy:#5C2E2E;--text:#2C2416;--muted:#7A6E5F;--correct:#2D5A27;--wrong:#7A1F1F;--card-bg:#FFFDF8}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background-color:var(--cream);color:var(--text);font-family:'Lato',sans-serif;font-weight:300;min-height:100vh;background-image:radial-gradient(ellipse at 10% 20%,rgba(184,150,90,.06) 0%,transparent 60%),radial-gradient(ellipse at 90% 80%,rgba(92,46,46,.05) 0%,transparent 60%)}
+  .top-bar{background:var(--dark);padding:12px 40px;display:flex;align-items:center;justify-content:space-between}
+  .top-bar .series{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
+  .top-bar .nav-link{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;color:var(--gold-light);text-decoration:none;opacity:.8;transition:opacity .2s}
+  .top-bar .nav-link:hover{opacity:1}
+  .hero{text-align:center;padding:60px 40px 40px}
+  .chapter-label{font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:16px;display:block}
+  .chapter-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,5vw,48px);font-weight:300;color:var(--dark);line-height:1.2;margin-bottom:12px}
+  .chapter-title em{font-style:italic;color:var(--burgundy)}
+  .divider{display:flex;align-items:center;justify-content:center;gap:16px;margin:24px auto;max-width:300px}
+  .divider-line{flex:1;height:1px;background:var(--gold-light);opacity:.5}
+  .divider-diamond{width:6px;height:6px;background:var(--gold);transform:rotate(45deg)}
+  .subtitle{font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:var(--muted);max-width:520px;margin:0 auto 8px;line-height:1.7}
+  .progress-container{max-width:680px;margin:0 auto 40px;padding:0 40px}
+  .progress-info{display:flex;justify-content:space-between;font-size:12px;letter-spacing:1px;color:var(--muted);margin-bottom:8px;font-family:'Cinzel',serif}
+  .progress-bar{height:3px;background:rgba(184,150,90,.2);border-radius:2px;overflow:hidden}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-pale));border-radius:2px;transition:width .5s ease;width:0%}
+  .quiz-container{max-width:680px;margin:0 auto;padding:0 24px 80px}
+  .question-card{background:var(--card-bg);border:1px solid rgba(184,150,90,.2);border-radius:2px;padding:36px 40px;margin-bottom:24px;display:none;animation:fadeSlide .4s ease forwards;box-shadow:0 4px 24px rgba(26,21,16,.06);position:relative}
+  .question-card.active{display:block}
+  .question-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,var(--gold),transparent);border-radius:2px 0 0 2px}
+  @keyframes fadeSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .question-number{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:14px}
+  .question-text{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:400;line-height:1.55;color:var(--dark);margin-bottom:28px}
+  .options{display:flex;flex-direction:column;gap:10px}
+  .option{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;border:1px solid rgba(184,150,90,.25);border-radius:2px;cursor:pointer;transition:all .2s ease;background:transparent;text-align:left;width:100%;font-family:'Lato',sans-serif;font-size:14px;font-weight:300;color:var(--text);line-height:1.5}
+  .option:hover:not(:disabled){border-color:var(--gold);background:rgba(184,150,90,.05)}
+  .option-letter{font-family:'Cinzel',serif;font-size:11px;color:var(--gold);min-width:18px;margin-top:1px}
+  .option.correct{border-color:var(--correct);background:rgba(45,90,39,.06);color:var(--correct)}
+  .option.wrong{border-color:var(--wrong);background:rgba(122,31,31,.06);color:var(--wrong)}
+  .option:disabled{cursor:default}
+  .feedback{display:none;margin-top:20px;padding:16px 20px;border-left:3px solid var(--gold);background:rgba(184,150,90,.06);border-radius:0 2px 2px 0}
+  .feedback.show{display:block;animation:fadeSlide .3s ease forwards}
+  .feedback-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;color:var(--gold);margin-bottom:6px}
+  .feedback-text{font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:var(--muted);line-height:1.65}
+  .nav-buttons{display:flex;justify-content:space-between;align-items:center;margin-top:28px}
+  .btn{font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:12px 28px;border:1px solid var(--gold);background:transparent;color:var(--gold);cursor:pointer;transition:all .2s ease;border-radius:1px}
+  .btn:hover{background:var(--gold);color:var(--dark)}
+  .btn:disabled{opacity:.3;cursor:default}
+  .btn-primary{background:var(--dark);color:var(--gold-light);border-color:var(--dark)}
+  .btn-primary:hover{background:var(--gold);color:var(--dark);border-color:var(--gold)}
+  .results-card{display:none;background:var(--dark);border-radius:2px;padding:56px 40px;text-align:center;animation:fadeSlide .5s ease forwards}
+  .results-card.show{display:block}
+  .results-icon{font-size:48px;margin-bottom:20px}
+  .results-label{font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--gold);margin-bottom:12px}
+  .results-score{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:300;color:var(--cream);line-height:1;margin-bottom:8px}
+  .results-score span{font-size:32px;color:var(--gold-light)}
+  .results-message{font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:var(--gold-light);margin:20px auto;max-width:420px;line-height:1.6}
+  .results-verse{font-family:'Cormorant Garamond',serif;font-size:15px;color:rgba(245,240,232,.5);font-style:italic;margin-top:28px}
+  .results-actions{display:flex;gap:16px;justify-content:center;margin-top:36px;flex-wrap:wrap}
+  .btn-light{border-color:var(--gold-light);color:var(--gold-light)}
+  .btn-light:hover{background:var(--gold-light);color:var(--dark)}
+  @media(max-width:600px){.hero{padding:40px 24px 24px}.question-card{padding:28px 24px}.top-bar{padding:12px 24px}.progress-container{padding:0 24px}}
+
+  /* Share modal */
+  .share-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26,21,16,0.92);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    backdrop-filter: blur(4px);
+  }
+  .share-overlay.show { display: flex; }
+  .share-modal {
+    background: #FFFDF8;
+    border-radius: 2px;
+    padding: 40px;
+    max-width: 440px;
+    width: 100%;
+    position: relative;
+    animation: fadeSlide 0.3s ease forwards;
+    box-shadow: 0 24px 80px rgba(26,21,16,0.5);
+  }
+  .share-close {
+    position: absolute;
+    top: 16px; right: 20px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #7A6E5F;
+    line-height: 1;
+  }
+  .share-title {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: #B8965A;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .share-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    color: #1A1510;
+    margin-bottom: 24px;
+    line-height: 1.3;
+  }
+  .share-field-label {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: #7A6E5F;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .share-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid rgba(184,150,90,0.35);
+    border-radius: 2px;
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: #2C2416;
+    background: transparent;
+    margin-bottom: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .share-input:focus { border-color: #B8965A; }
+  .share-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 4px 0 16px;
+  }
+  .share-divider-line { flex:1; height:1px; background: rgba(184,150,90,0.2); }
+  .share-divider-text {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: #B8965A;
+    opacity: 0.6;
+  }
+  .share-buttons { display: flex; flex-direction: column; gap: 10px; }
+  .share-btn {
+    width: 100%;
+    padding: 13px 20px;
+    border-radius: 2px;
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+    border: none;
+  }
+  .share-btn-email {
+    background: #1A1510;
+    color: #D4B483;
+  }
+  .share-btn-email:hover { background: #B8965A; color: #1A1510; }
+  .share-btn-sms {
+    background: transparent;
+    border: 1px solid rgba(184,150,90,0.4);
+    color: #B8965A;
+  }
+  .share-btn-sms:hover { background: rgba(184,150,90,0.08); border-color: #B8965A; }
+  .share-btn-copy {
+    background: transparent;
+    border: 1px solid rgba(184,150,90,0.2);
+    color: #7A6E5F;
+    font-size: 9px;
+  }
+  .share-btn-copy:hover { border-color: rgba(184,150,90,0.5); color: #B8965A; }
+  .share-note {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-style: italic;
+    color: #7A6E5F;
+    margin-top: 16px;
+    text-align: center;
+    line-height: 1.5;
+  }
+  .share-success {
+    display: none;
+    text-align: center;
+    padding: 16px;
+  }
+  .share-success.show { display: block; }
+  .share-success-icon { font-size: 32px; margin-bottom: 8px; }
+  .share-success-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: #2D5A27;
+  }
+
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <span class="series">En Autoridad &amp; Bajo Autoridad — Milton Valle</span>
+  <a href="index.html" class="nav-link">← Todos los capítulos</a>
+</div>
+<div class="hero">
+  <span class="chapter-label">Capítulo 10</span>
+  <h1 class="chapter-title">El que está en Autoridad representa a <em>Dios</em></h1>
+  <div class="divider"><div class="divider-line"></div><div class="divider-diamond"></div><div class="divider-line"></div></div>
+  <p class="subtitle">¡Todo aquel que está en autoridad dará cuenta ante Dios de cómo representó Su nombre!</p>
+</div>
+<div class="progress-container">
+  <div class="progress-info"><span id="progress-text">Pregunta 1 de 12</span><span id="score-text">0 correctas</span></div>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+<div class="quiz-container">
+  <div class="question-card active" id="q1"><div class="question-number">Pregunta 01</div><p class="question-text">¿Qué significa que Pablo se llamara a sí mismo 'embajador en cadenas' (Efesios 6:20)?</p><div class="options"><button class="option" onclick="answer(this,false,'q1')"><span class="option-letter">A</span>Que se sentía prisionero de su ministerio</button>
+<button class="option" onclick="answer(this,true,'q1')"><span class="option-letter">B</span>Que aunque estaba preso en Roma, no se veía como víctima sino como representante oficial del cielo; las cadenas no le quitaban autoridad, confirmaban su fidelidad</button>
+<button class="option" onclick="answer(this,false,'q1')"><span class="option-letter">C</span>Que su autoridad como apóstol estaba temporalmente limitada</button>
+<button class="option" onclick="answer(this,false,'q1')"><span class="option-letter">D</span>Que quería que los creyentes sintieran compasión por su situación</button>
+</div><div class="feedback" id="fb1"><div class="feedback-title">Reflexión</div><div class="feedback-text">Pablo entendía que su Rey era Dios, su reino era el Reino de los Cielos, su mensaje era el evangelio, y sus cadenas eran consecuencia de cumplir fielmente su misión. La representación de Dios no depende de las circunstancias externas sino de la fidelidad interna.</div></div><div class="nav-buttons"><button class="btn" disabled>← Anterior</button><button class="btn btn-primary" id="next1" onclick="next(1)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q2"><div class="question-number">Pregunta 02</div><p class="question-text">¿Cuál fue el error de Moisés en Números 20 cuando golpeó la roca en lugar de hablarle?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q2')"><span class="option-letter">A</span>Usó su vara de manera incorrecta</button>
+<button class="option" onclick="answer(this,false,'q2')"><span class="option-letter">B</span>No creyó que el milagro ocurriría</button>
+<button class="option" onclick="answer(this,false,'q2')"><span class="option-letter">C</span>Ignoró las instrucciones porque estaba cansado</button>
+<button class="option" onclick="answer(this,true,'q2')"><span class="option-letter">D</span>Representó incorrectamente el carácter de Dios: golpeó en lugar de hablar, actuó con irritación, y habló como si el poder proviniera de él en lugar de Dios</button>
+</div><div class="feedback" id="fb2"><div class="feedback-title">Reflexión</div><div class="feedback-text">El error de Moisés no fue solo golpear la roca, sino representar incorrectamente el carácter de Dios delante del pueblo. Moisés proyectó ira cuando Dios quería mostrar provisión y misericordia. La autoridad espiritual no existe para exhibir el propio carácter, sino el de Dios.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(2)">← Anterior</button><button class="btn btn-primary" id="next2" onclick="next(2)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q3"><div class="question-number">Pregunta 03</div><p class="question-text">¿Qué significa 'santificar a Dios' en el contexto del liderazgo, según el capítulo?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q3')"><span class="option-letter">A</span>Realizar rituales sagrados de forma correcta</button>
+<button class="option" onclick="answer(this,false,'q3')"><span class="option-letter">B</span>Hablar constantemente en nombre de Dios con autoridad profética</button>
+<button class="option" onclick="answer(this,true,'q3')"><span class="option-letter">C</span>Representar a Dios correctamente como santo, fiel y paciente, actuando conforme a Su palabra y no a nuestras emociones</button>
+<button class="option" onclick="answer(this,false,'q3')"><span class="option-letter">D</span>Mantener separación de todo lo mundano</button>
+</div><div class="feedback" id="fb3"><div class="feedback-title">Reflexión</div><div class="feedback-text">Números 20:12: 'Por cuanto no creísteis en mí, para santificarme delante de los hijos de Israel.' Santificar a Dios implica reflejar Su justicia sin dureza, manifestar Su misericordia sin debilidad, y actuar conforme a Su palabra, no a nuestras emociones.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(3)">← Anterior</button><button class="btn btn-primary" id="next3" onclick="next(3)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q4"><div class="question-number">Pregunta 04</div><p class="question-text">¿Cuál es el principio de Lucas 12:48 aplicado al liderazgo espiritual?</p><div class="options"><button class="option" onclick="answer(this,false,'q4')"><span class="option-letter">A</span>Que los líderes deben trabajar más que los demás miembros</button>
+<button class="option" onclick="answer(this,true,'q4')"><span class="option-letter">B</span>Que la posición eleva la influencia pero también eleva la rendición de cuentas; a quien más se confía, más se demanda</button>
+<button class="option" onclick="answer(this,false,'q4')"><span class="option-letter">C</span>Que los resultados visibles del ministerio determinan el nivel de responsabilidad</button>
+<button class="option" onclick="answer(this,false,'q4')"><span class="option-letter">D</span>Que los líderes son juzgados con más severidad por sus pecados personales</button>
+</div><div class="feedback" id="fb4"><div class="feedback-title">Reflexión</div><div class="feedback-text">Israel se rebeló muchas veces y Dios fue paciente. Pero Moisés y Aarón cometieron un solo acto indebido y fueron excluidos de Canaán. La posición eleva la responsabilidad, la representación incorrecta afecta a muchos, y el ministerio puede cesar cuando el testimonio se pierde.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(4)">← Anterior</button><button class="btn btn-primary" id="next4" onclick="next(4)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q5"><div class="question-number">Pregunta 05</div><p class="question-text">La consecuencia de Moisés fue no entrar a la Tierra Prometida a pesar de 40 años de servicio fiel. ¿Qué enseña esto sobre el liderazgo?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q5')"><span class="option-letter">A</span>Que Dios es inflexible y no valora los años de fidelidad pasada</button>
+<button class="option" onclick="answer(this,false,'q5')"><span class="option-letter">B</span>Que el liderazgo de largo plazo inevitablemente conduce al agotamiento y el error</button>
+<button class="option" onclick="answer(this,true,'q5')"><span class="option-letter">C</span>Que las decisiones descuidadas tienen consecuencias duraderas; la obediencia parcial no reemplaza la fidelidad total; incluso los grandes líderes pueden caer en un momento crítico</button>
+<button class="option" onclick="answer(this,false,'q5')"><span class="option-letter">D</span>Que Dios favorece a los líderes jóvenes sobre los de mayor edad</button>
+</div><div class="feedback" id="fb5"><div class="feedback-title">Reflexión</div><div class="feedback-text">Moisés fue llamado 'el hombre más manso de la tierra', pero incluso él falló en un momento crítico. La clave del liderazgo es primero gobernarse a uno mismo. La autoridad verdadera fluye de obediencia, dominio propio y fidelidad silenciosa.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(5)">← Anterior</button><button class="btn btn-primary" id="next5" onclick="next(5)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q6"><div class="question-number">Pregunta 06</div><p class="question-text">¿Por qué Moisés y Aarón no reclamaron a Dios cuando no pudieron entrar a la Tierra Prometida?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q6')"><span class="option-letter">A</span>Porque sabían que Dios cambiaría de parecer si rogaban suficiente</button>
+<button class="option" onclick="answer(this,false,'q6')"><span class="option-letter">B</span>Porque ya eran muy ancianos y no les importaba tanto entrar</button>
+<button class="option" onclick="answer(this,true,'q6')"><span class="option-letter">C</span>Porque entendían que habían hecho quedar mal a Dios delante de la congregación; reconocieron su error sin excusas y sin justificaciones</button>
+<button class="option" onclick="answer(this,false,'q6')"><span class="option-letter">D</span>Porque respetaban demasiado a Dios para cuestionarle</button>
+</div><div class="feedback" id="fb6"><div class="feedback-title">Reflexión</div><div class="feedback-text">Moisés y Aarón aceptaron la consecuencia, sabiendo que habían representado incorrectamente a Dios delante de la congregación. Reconocieron sus errores y no intentaron justificar su acto con excusas humanas. Esta actitud contrasta con la de los rebeldes que huyen.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(6)">← Anterior</button><button class="btn btn-primary" id="next6" onclick="next(6)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q7"><div class="question-number">Pregunta 07</div><p class="question-text">¿Cuál es la diferencia entre el rebelde y el obediente cuando reciben disciplina de Dios, según el capítulo?</p><div class="options">
+<button class="option" onclick="answer(this,true,'q7')"><span class="option-letter">A</span>El rebelde busca justificar todo y huye; el obediente se somete, se queda y acepta la disciplina</button>
+<button class="option" onclick="answer(this,false,'q7')"><span class="option-letter">B</span>El rebelde se arrepiente rápido; el obediente tarda en reconocer su error</button>
+<button class="option" onclick="answer(this,false,'q7')"><span class="option-letter">C</span>El rebelde expresa sus emociones; el obediente las reprime</button>
+<button class="option" onclick="answer(this,false,'q7')"><span class="option-letter">D</span>No hay diferencia real en cómo ambos responden a la disciplina</button>
+</div><div class="feedback" id="fb7"><div class="feedback-title">Reflexión</div><div class="feedback-text">Hebreos 12:5-6: 'El Señor al que ama, disciplina.' Aceptar la disciplina sana y corrige, mientras que huir o justificar el pecado lleva a consecuencias graves. El rebelde busca justificar todo y huye; el obediente solo se somete, se queda y acepta la disciplina.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(7)">← Anterior</button><button class="btn btn-primary" id="next7" onclick="next(7)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q8"><div class="question-number">Pregunta 08</div><p class="question-text">¿Qué revela la 'pelea por el cuerpo de Moisés' (Judas 1:9) sobre el valor de la obediencia y la humildad ante Dios?</p><div class="options">
+<button class="option" onclick="answer(this,true,'q8')"><span class="option-letter">A</span>Que aunque Moisés enfrentó consecuencias por su error, su obediencia y humildad general ante Dios le trajeron protección y honra incluso después de la muerte</button>
+<button class="option" onclick="answer(this,false,'q8')"><span class="option-letter">B</span>Que el cuerpo físico de los siervos de Dios tiene valor sobrenatural</button>
+<button class="option" onclick="answer(this,false,'q8')"><span class="option-letter">C</span>Que Satanás siempre intenta deshonrar a los siervos de Dios después de su muerte</button>
+<button class="option" onclick="answer(this,false,'q8')"><span class="option-letter">D</span>Que Miguel el arcángel tiene autoridad sobre los cuerpos de los creyentes</button>
+</div><div class="feedback" id="fb8"><div class="feedback-title">Reflexión</div><div class="feedback-text">Aunque Moisés había muerto y no pudo entrar a la Tierra Prometida, la obediencia y la humildad ante Dios le trajeron protección y honra incluso después de la muerte. Aunque enfrentemos consecuencias por nuestros errores, la humildad y la sumisión a Dios nos mantiene bajo Su cuidado.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(8)">← Anterior</button><button class="btn btn-primary" id="next8" onclick="next(8)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q9"><div class="question-number">Pregunta 09</div><p class="question-text">'Tu vida predica todos los días, incluso cuando tu boca está cerrada.' ¿Qué implica esto para el que ejerce autoridad?</p><div class="options">
+<button class="option" onclick="answer(this,false,'q9')"><span class="option-letter">A</span>Que debe ser cuidadoso principalmente con lo que dice en público</button>
+<button class="option" onclick="answer(this,false,'q9')"><span class="option-letter">B</span>Que la predicación verbal es menos importante que la vida personal</button>
+<button class="option" onclick="answer(this,false,'q9')"><span class="option-letter">C</span>Que los líderes deben evitar toda exposición pública innecesaria</button>
+<button class="option" onclick="answer(this,true,'q9')"><span class="option-letter">D</span>Que la coherencia entre la vida privada y el mensaje público es lo que da autoridad moral; la gente puede dudar de un mensaje pero no puede ignorar un ejemplo</button>
+</div><div class="feedback" id="fb9"><div class="feedback-title">Reflexión</div><div class="feedback-text">La autoridad enseña con la boca, pero forma con la conducta. 1 Timoteo 4:12: 'Sé ejemplo de los creyentes.' Un líder puede predicar paciencia y perderla en público. La coherencia es lo que te da autoridad moral, no el cargo.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(9)">← Anterior</button><button class="btn btn-primary" id="next9" onclick="next(9)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q10"><div class="question-number">Pregunta 10</div><p class="question-text">¿Qué diferencia fundamental hay entre quien ejerce autoridad 'desde el ego' y quien la ejerce 'desde el altar'?</p><div class="options"><button class="option" onclick="answer(this,false,'q10')"><span class="option-letter">A</span>La diferencia está en el estilo de comunicación y la personalidad del líder</button>
+<button class="option" onclick="answer(this,true,'q10')"><span class="option-letter">B</span>El que gobierna desde el ego usa su posición para afirmarse; el que gobierna desde el altar representa a Dios, no su opinión, y actúa con temor de Dios</button>
+<button class="option" onclick="answer(this,false,'q10')"><span class="option-letter">C</span>El que gobierna desde el altar nunca toma decisiones impopulares</button>
+<button class="option" onclick="answer(this,false,'q10')"><span class="option-letter">D</span>La diferencia es principalmente de intensidad emocional en el servicio</button>
+</div><div class="feedback" id="fb10"><div class="feedback-title">Reflexión</div><div class="feedback-text">2 Corintios 4:5: 'No nos predicamos a nosotros mismos, sino a Jesucristo como Señor.' El líder espiritual es el espejo donde el pueblo intenta ver a Dios. No actúa por impulso; refleja la santidad, la paciencia y la fidelidad del Señor.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(10)">← Anterior</button><button class="btn btn-primary" id="next10" onclick="next(10)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q11"><div class="question-number">Pregunta 11</div><p class="question-text">Reflexionando en tu vida: si alguien conociera a Dios únicamente a través de tu conducta como autoridad (o como persona bajo autoridad), ¿qué imagen de Dios estaría recibiendo?</p><div class="options">
+<button class="option" onclick="answer(this,true,'q11')"><span class="option-letter">A</span>Una imagen de un Dios exigente y difícil de agradar</button>
+<button class="option" onclick="answer(this,true,'q11')"><span class="option-letter">B</span>Una imagen de un Dios que da libertad sin responsabilidad</button>
+<button class="option" onclick="answer(this,true,'q11')"><span class="option-letter">C</span>Esta pregunta me confronta y necesito llevarla honestamente a Dios en oración</button>
+<button class="option" onclick="answer(this,true,'q11')"><span class="option-letter">D</span>Una imagen de un Dios paciente, misericordioso y justo</button>
+</div><div class="feedback" id="fb11"><div class="feedback-title">Reflexión</div><div class="feedback-text">Toda respuesta honesta es punto de partida. La oración del capítulo lo resume: 'Señor, no permitas que mi posición distorsione tu carácter. Enséñame a obedecer con exactitud, a gobernarme antes de dirigir y a servir sin perder el gozo.'</div></div><div class="nav-buttons"><button class="btn" onclick="prev(11)">← Anterior</button><button class="btn btn-primary" id="next11" onclick="next(11)" disabled>Siguiente →</button></div></div>
+  <div class="question-card" id="q12"><div class="question-number">Pregunta 12</div><p class="question-text">¿Cuál es la clave de autoridad que el capítulo extrae de la vida de Moisés?</p><div class="options">
+<button class="option" onclick="answer(this,true,'q12')"><span class="option-letter">A</span>Primero gobernarse a uno mismo; la autoridad verdadera fluye de obediencia, dominio propio y fidelidad silenciosa</button>
+<button class="option" onclick="answer(this,false,'q12')"><span class="option-letter">B</span>La fidelidad en los 40 años de ministerio garantiza el perdón de los errores</button>
+<button class="option" onclick="answer(this,false,'q12')"><span class="option-letter">C</span>Los resultados del ministerio son la medida principal de la autoridad espiritual</button>
+<button class="option" onclick="answer(this,false,'q12')"><span class="option-letter">D</span>La cercanía con Dios en lo sobrenatural es la base de la autoridad</button>
+</div><div class="feedback" id="fb12"><div class="feedback-title">Reflexión</div><div class="feedback-text">Moisés fue el hombre más manso de la tierra, pero en un momento crítico perdió el dominio propio. La clave del liderazgo es primero gobernarse a uno mismo. Moisés no perdió su relación con Dios ni su llamado profético, pero sí perdió el privilegio de entrar en la tierra prometida.</div></div><div class="nav-buttons"><button class="btn" onclick="prev(12)">← Anterior</button><button class="btn btn-primary" onclick="showResults()">Ver resultados →</button></div></div>
+
+  <div class="results-card" id="results">
+    <div class="results-icon">✦</div>
+    <div class="results-label">Resultado Final — Capítulo 10</div>
+    <div class="results-score" id="score-display">0<span>/12</span></div>
+    <p class="results-message" id="results-message"></p>
+    <p class="results-verse">"La vida del ministro es el sermón más poderoso que predica." — Charles Spurgeon</p>
+    <div class="results-actions">
+      <button class="btn btn-light" onclick="restart()">Intentar de nuevo</button>
+      <button class="btn btn-primary" onclick="openShare('El que está en Autoridad representa a Dios', score, total)" style="background:#B8965A;border-color:#B8965A;color:#1A1510;">✉ Enviar resultados</button>
+      <a href="capitulo11.html" class="btn btn-primary" style="text-decoration:none;">Capítulo 11 →</a>
+      <a href="index.html" class="btn btn-light" style="text-decoration:none;">Ver todos</a>
+    </div>
+  </div>
+</div>
+<script>
+let current=1,score=0;const total=12,answered={};
+function answer(btn,isCorrect,qId){if(answered[qId])return;answered[qId]=true;const options=btn.parentElement.querySelectorAll('.option');options.forEach(o=>{o.disabled=true});const num=parseInt(qId.replace('q',''));if(isCorrect){btn.classList.add('correct');score++;document.getElementById('score-text').textContent=score+' correcta'+(score!==1?'s':'');}
+  // Record for share
+  const qCard=document.getElementById('q'+num);
+  const qText=qCard.querySelector('.question-text').textContent;
+  const fbText=qCard.querySelector('.feedback-text').textContent;
+  recordAnswer(num,qText,btn.querySelector('.option-letter').nextSibling?btn.textContent.trim().replace(/^[A-D]/,'').trim():btn.textContent.trim(),isCorrect,fbText);else{btn.classList.add('wrong');options.forEach(o=>{if(o.getAttribute('onclick').includes('true'))o.classList.add('correct')});}document.getElementById('fb'+num).classList.add('show');const nextBtn=document.getElementById('next'+num);if(nextBtn)nextBtn.disabled=false;if(num===total)document.querySelector('#q12 .btn-primary').disabled=false;}
+function next(n){document.getElementById('q'+n).classList.remove('active');current=n+1;document.getElementById('q'+current).classList.add('active');updateProgress();window.scrollTo({top:0,behavior:'smooth'});}
+function prev(n){document.getElementById('q'+n).classList.remove('active');current=n-1;document.getElementById('q'+current).classList.add('active');updateProgress();window.scrollTo({top:0,behavior:'smooth'});}
+function updateProgress(){document.getElementById('progress-text').textContent='Pregunta '+current+' de '+total;document.getElementById('progress-fill').style.width=((current-1)/total*100)+'%';}
+function showResults(){document.getElementById('q12').classList.remove('active');const r=document.getElementById('results');r.classList.add('show');document.getElementById('score-display').innerHTML=score+'<span>/'+total+'</span>';let msg='';if(score>=10)msg='Excelente. Este capítulo ha calado profundo en tu comprensión. Que esta verdad se convierta en obediencia activa.';else if(score>=7)msg='Buen avance. Te invitamos a releer las secciones donde dudaste y llevarlas a la oración.';else msg='Este capítulo tiene mucho más para darte. Vuelve a leerlo con calma y pídele a Dios revelación, no solo información.';document.getElementById('results-message').textContent=msg;document.getElementById('progress-fill').style.width='100%';window.scrollTo({top:0,behavior:'smooth'});}
+function restart(){location.reload();}
+updateProgress();document.querySelector('#q12 .btn-primary').disabled=true;
+
+// ── Share functionality ──────────────────────────────────────────────
+
+// Store answer data per question
+const questionData = {};
+function recordAnswer(qNum, questionText, selectedText, isCorrect, feedbackText) {
+  questionData[qNum] = { questionText, selectedText, isCorrect, feedbackText };
+}
+
+function buildSummary(chapterTitle, scoreVal, totalVal) {
+  const pct = Math.round((scoreVal / totalVal) * 100);
+  let summary = '== EN AUTORIDAD & BAJO AUTORIDAD ==\n';
+  summary += 'Milton Valle\n\n';
+  summary += `Capítulo: ${chapterTitle}\n`;
+  summary += `Nota: ${scoreVal}/${totalVal} (${pct}%)\n`;
+  summary += '─────────────────────────────\n\n';
+
+  const keys = Object.keys(questionData).map(Number).sort((a,b)=>a-b);
+  keys.forEach(n => {
+    const d = questionData[n];
+    const status = d.isCorrect ? '✓' : '✗';
+    summary += `${status} Pregunta ${n}: ${d.questionText}\n`;
+    summary += `   Mi respuesta: ${d.selectedText}\n`;
+    summary += `   Reflexión: ${d.feedbackText}\n\n`;
+  });
+
+  summary += '─────────────────────────────\n';
+  if (pct >= 83) summary += '"El que sabe obedecer en lo secreto, será establecido por Dios en lo público."';
+  else summary += '"Prefiero ser formado bajo Tu autoridad que usado sin estar rendido a Tu voluntad."';
+  summary += '\n— En Autoridad & Bajo Autoridad — Milton Valle';
+  return summary;
+}
+
+let currentSummary = '';
+let currentChapterTitle = '';
+
+function openShare(chapterTitle, scoreVal, totalVal) {
+  currentChapterTitle = chapterTitle;
+  currentSummary = buildSummary(chapterTitle, scoreVal, totalVal);
+  document.getElementById('shareModalTitle').textContent = `Capítulo: ${chapterTitle}`;
+  document.getElementById('shareOverlay').classList.add('show');
+  document.getElementById('shareForm').style.display = 'block';
+  document.getElementById('shareSuccess').classList.remove('show');
+}
+
+function closeShare() {
+  document.getElementById('shareOverlay').classList.remove('show');
+}
+
+function closeShareIfOutside(e) {
+  if (e.target === document.getElementById('shareOverlay')) closeShare();
+}
+
+function sendEmail() {
+  const email = document.getElementById('shareEmail').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('shareEmail').style.borderColor = '#7A1F1F';
+    document.getElementById('shareEmail').focus();
+    return;
+  }
+  document.getElementById('shareEmail').style.borderColor = '';
+
+  const subject = encodeURIComponent(`Mi resultado — ${currentChapterTitle} | En Autoridad & Bajo Autoridad`);
+  const body = encodeURIComponent(currentSummary);
+  const mailto = `mailto:${email}?subject=${subject}&body=${body}`;
+  window.location.href = mailto;
+
+  showSuccess('Tu cliente de correo abrirá en un momento con el resumen listo para enviar.');
+}
+
+function sendSMS() {
+  const phone = document.getElementById('sharePhone').value.trim().replace(/\s/g,'');
+  if (!phone) {
+    document.getElementById('sharePhone').style.borderColor = '#7A1F1F';
+    document.getElementById('sharePhone').focus();
+    return;
+  }
+  document.getElementById('sharePhone').style.borderColor = '';
+
+  const keys = Object.keys(questionData).map(Number).sort((a,b)=>a-b);
+  const correct2 = keys.filter(n => questionData[n].isCorrect).length;
+  const pct = Math.round((correct2/keys.length)*100);
+
+  let smsBody = `En Autoridad & Bajo Autoridad — Milton Valle\n`;
+  smsBody += `Capítulo: ${currentChapterTitle}\n`;
+  smsBody += `Nota: ${correct2}/${keys.length} (${pct}%)\n\n`;
+  keys.forEach(n => {
+    const d = questionData[n];
+    smsBody += `${d.isCorrect ? '✓' : '✗'} P${n}: ${d.selectedText}\n`;
+    smsBody += `   → ${d.feedbackText}\n\n`;
+  });
+  if (pct >= 83) smsBody += '"El que sabe obedecer en lo secreto, será establecido por Dios en lo público."';
+  else smsBody += '"Prefiero ser formado bajo Tu autoridad que usado sin estar rendido a Tu voluntad."';
+  smsBody += '\n— En Autoridad & Bajo Autoridad';
+
+  const encoded = encodeURIComponent(smsBody);
+  window.location.href = `sms:${phone}?body=${encoded}`;
+  showSuccess('Tu aplicación de mensajes se abrirá con el resumen completo y todas las reflexiones.');
+}
+
+function copyToClipboard() {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(currentSummary).then(() => {
+      showSuccess('Resultados copiados al portapapeles. Puedes pegarlo donde quieras.');
+    }).catch(() => fallbackCopy());
+  } else {
+    fallbackCopy();
+  }
+}
+
+function fallbackCopy() {
+  const ta = document.createElement('textarea');
+  ta.value = currentSummary;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try {
+    document.execCommand('copy');
+    showSuccess('Resultados copiados al portapapeles. Puedes pegarlo donde quieras.');
+  } catch(e) {
+    showSuccess('No se pudo copiar automáticamente. Selecciona el texto manualmente.');
+  }
+  document.body.removeChild(ta);
+}
+
+function showSuccess(msg) {
+  document.getElementById('shareForm').style.display = 'none';
+  const s = document.getElementById('shareSuccess');
+  document.getElementById('shareSuccessText').textContent = msg;
+  s.classList.add('show');
+  setTimeout(() => closeShare(), 3500);
+}
+
+</script>
+
+<!-- Share Modal -->
+<div class="share-overlay" id="shareOverlay" onclick="closeShareIfOutside(event)">
+  <div class="share-modal" id="shareModal">
+    <button class="share-close" onclick="closeShare()">✕</button>
+    <div id="shareForm">
+      <div class="share-title">Compartir resultados</div>
+      <div class="share-subtitle" id="shareModalTitle">Envía tu nota y reflexiones</div>
+
+      <label class="share-field-label" for="shareEmail">Correo electrónico</label>
+      <input class="share-input" type="email" id="shareEmail" placeholder="tu@correo.com">
+
+      <button class="share-btn share-btn-email" onclick="sendEmail()">
+        ✉ Enviar por correo
+      </button>
+
+      <div class="share-divider">
+        <div class="share-divider-line"></div>
+        <div class="share-divider-text">o por</div>
+        <div class="share-divider-line"></div>
+      </div>
+
+      <label class="share-field-label" for="sharePhone">Número de teléfono</label>
+      <input class="share-input" type="tel" id="sharePhone" placeholder="+1 (555) 000-0000">
+
+      <button class="share-btn share-btn-sms" onclick="sendSMS()">
+        💬 Enviar por mensaje de texto
+      </button>
+
+      <div class="share-divider" style="margin-top:16px">
+        <div class="share-divider-line"></div>
+        <div class="share-divider-text">o simplemente</div>
+        <div class="share-divider-line"></div>
+      </div>
+
+      <button class="share-btn share-btn-copy" onclick="copyToClipboard()">
+        ⎘ Copiar resultados al portapapeles
+      </button>
+
+      <p class="share-note">El resumen incluye tu nota, las preguntas y las reflexiones del capítulo.</p>
+    </div>
+    <div class="share-success" id="shareSuccess">
+      <div class="share-success-icon">✦</div>
+      <p class="share-success-text" id="shareSuccessText"></p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
