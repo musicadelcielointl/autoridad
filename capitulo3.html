@@ -396,12 +396,13 @@ function answer(btn,isCorrect,qId){
   options.forEach(o=>{o.disabled=true});
   const num=parseInt(qId.replace('q',''));
   if(isCorrect){btn.classList.add('correct');score++;document.getElementById('score-text').textContent=score+' correcta'+(score!==1?'s':'');}
+  else{btn.classList.add('wrong');options.forEach(o=>{if(o.getAttribute('onclick').includes('true'))o.classList.add('correct')});}
+
   // Record for share
   const qCard=document.getElementById('q'+num);
-  const qText=qCard.querySelector('.question-text').textContent;
-  const fbText=qCard.querySelector('.feedback-text').textContent;
-  recordAnswer(num,qText,btn.querySelector('.option-letter').nextSibling?btn.textContent.trim().replace(/^[A-D]/,'').trim():btn.textContent.trim(),isCorrect,fbText);
-  else{btn.classList.add('wrong');options.forEach(o=>{if(o.getAttribute('onclick').includes('true'))o.classList.add('correct')});}
+  const qText=qCard&&qCard.querySelector('.question-text')?qCard.querySelector('.question-text').textContent:'';
+  const fbText=qCard&&qCard.querySelector('.feedback-text')?qCard.querySelector('.feedback-text').textContent:'';
+  recordAnswer(num,qText,btn.textContent.trim().replace(/^[A-D][\.\)]?\s*/,''),isCorrect,fbText);
   document.getElementById('fb'+num).classList.add('show');
   const nextBtn=document.getElementById('next'+num);if(nextBtn)nextBtn.disabled=false;
   if(num===total)document.querySelector('#q12 .btn-primary').disabled=false;
